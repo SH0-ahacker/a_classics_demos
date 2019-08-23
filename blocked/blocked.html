@@ -1,0 +1,67 @@
+<section ui-view="subheader" class="subheader ng-scope" ng-class="{overlay:mobileCtrl.scrollOverlay, 'debug-view-header': mobileCtrl.isInDebugView()}" ng-if="!mobileCtrl.disableSubHeader"><div class="date-toolbar latest-release-report-subheader ng-scope">
+  <div layout="row" dir="ltr" class="layout-row">
+    <!-- ngIf: ctrl.showDropdown -->
+    <!-- ngIf: ctrl.showQualityIcon() -->
+    <!-- ngIf: !ctrl.hideFilters --><section ng-if="!ctrl.hideFilters" layout="row" layout-align="space-between center" class="filter-date ng-scope layout-align-space-between-center layout-row flex" flex="">
+      <ga-report-filter class="filter-right ng-isolate-scope" disabled="true"><div class="report-filter layout-row" layout="row">
+  <!-- ngIf: !ctrl.isSegmentBuilderEnabled --><ga-item-menu-display ng-if="!ctrl.isSegmentBuilderEnabled" ng-model="ctrl.goldModel" guidedhelpid="plc-filter-control" apply-class="ctrl.applyButtonClass" is-loading="ctrl.isLoading" item-menu="ctrl.menu" chip-display="false" multi-chip-display="true" on-checkbox-change="ctrl.onCheckboxChange" multi-select="true" enhanced-menu="true" disabled="ctrl.disabled" placeholder="ctrl.placeholderMsg" total-text-formatter="ctrl.totalTextFormatter" class="ng-pristine ng-valid ng-scope ng-isolate-scope ng-not-empty ng-touched" aria-invalid="false"><!-- ngIf: !chipDisplay && !multiChipDisplay -->
+<!-- ngIf: chipDisplay -->
+<!-- ngIf: multiChipDisplay --><md-menu ng-if="multiChipDisplay" class="md-menu ng-scope _md">
+  <div>
+    <div class="chip disabled layout-align-start-center layout-row flex" ng-class="{disabled: disabled}" layout="row" layout-align="start center" ng-click="!disabled &amp;&amp; $mdMenu.open($event)" flex="" aria-haspopup="true" role="button" tabindex="0" aria-expanded="false" aria-owns="menu_container_5">
+      <!-- ngIf: selectedItem.display == placeholder -->
+      <div class="chip-text" ng-switch="disabled" md-menu-origin="">
+        <!-- ngSwitchWhen: true --><span ng-switch-when="true" class="ng-scope">
+          blobked
+        </span><!-- end ngSwitchWhen: -->
+        <!-- ngSwitchDefault: -->
+      </div>
+      <!-- ngIf: !disabled -->
+    </div>
+  </div>
+  
+<div class="_md md-open-menu-container md-whiteframe-z2" id="menu_container_5" style="display: none;" aria-hidden="true"><md-menu-content id="item-menu-content" role="menu">
+    <ga-item-menu item-menu="itemMenu" is-loading="isLoading" on-menu-submit="ctrl.submit" multi-select="multiSelect" apply-class="applyClass" enhanced-menu="ctrl.enhancedMenu" on-checkbox-change="ctrl.onCheckboxChange()" total-text-formatter="totalTextFormatter" class="ng-isolate-scope"><!-- ngIf: $ctrl.isLoading -->
+<div class="item-menu layout-row multi-select" ng-class="{'multi-select': $ctrl.multiSelect, 'loading': $ctrl.isLoading}" layout="row">
+  <!-- ngRepeat: items in $ctrl.selectedItemBranches | limitTo:$ctrl.limit --><div ng-repeat="items in $ctrl.selectedItemBranches | limitTo:$ctrl.limit" class="menu-list  last layout-column" ng-class="{last: $last}" layout="column">
+    
+    <!-- ngIf: !items.type || items.type == 'default' --><div ng-if="!items.type || items.type == 'default'" class="menu-item-container ng-scope flex" flex="">
+      <!-- ngRepeat: item in items.items -->
+    </div><!-- end ngIf: !items.type || items.type == 'default' -->
+    
+    <!-- ngIf: items.type == 'autocomplete' -->
+    
+    <!-- ngIf: items.type == 'entry' -->
+    
+    <!-- ngIf: items.totalTextFormatter -->
+  </div><!-- end ngRepeat: items in $ctrl.selectedItemBranches | limitTo:$ctrl.limit -->
+  <!-- ngIf: $ctrl.enhancedMenu --><div ng-if="$ctrl.enhancedMenu" class="menu-list  last layout-column" layout="column">
+    <!-- ngIf: $ctrl.totalTextFormatter --><div ng-if="$ctrl.totalTextFormatter" class="enhanced-summary-text ng-binding ng-scope layout-row" layout="row">
+        blobked
+    </div><!-- end ngIf: $ctrl.totalTextFormatter -->
+    <md-divider class="md-scionTheme-theme"></md-divider>
+    <div flex="auto" class="menu-item-container layout-column flex-auto" layout="column">
+      <!-- ngRepeat: item in $ctrl.checkedItems -->
+    </div>
+  </div><!-- end ngIf: $ctrl.enhancedMenu -->
+</div>
+<!-- ngIf: $ctrl.multiSelect --><md-toolbar class="md-menu-toolbar ng-scope _md md-scionTheme-theme _md-toolbar-transitions" ng-if="$ctrl.multiSelect" ng-show="!$ctrl.isLoading" aria-hidden="false">
+  <span flex="" class="flex"></span>
+  <button class="md-button md-scionTheme-theme md-ink-ripple" type="button" ng-transclude="" ng-click="$ctrl.cancel()">
+    Cancelar
+  </button>
+  <button class="md-primary md-button md-scionTheme-theme md-ink-ripple plc-apply-button-class" type="button" ng-transclude="" ng-class="$ctrl.applyClass" ng-click="$ctrl.applyMultiFilter()">
+    Aplicar
+  </button>
+</md-toolbar><!-- end ngIf: $ctrl.multiSelect -->
+</ga-item-menu>
+  </md-menu-content></div></md-menu><!-- end ngIf: multiChipDisplay -->
+</ga-item-menu-display><!-- end ngIf: !ctrl.isSegmentBuilderEnabled -->
+  <!-- ngIf: ctrl.isSegmentBuilderEnabled -->
+  <!-- ngIf: !ctrl.disabled -->
+</div>
+</ga-report-filter>
+    </section><!-- end ngIf: !ctrl.hideFilters -->
+  </div>
+</div>
+</section>
