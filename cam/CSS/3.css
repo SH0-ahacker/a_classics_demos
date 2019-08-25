@@ -1,0 +1,16 @@
+
+/*new file for cam */
+
+.textarea
+{
+ width: 365px;
+ resize: none;
+}
+
+.validation-advice { width: 365px; }
+.validatedob{
+    position: relative;
+    top:-50px;
+    left: 115px;
+    
+}
