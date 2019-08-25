@@ -1,0 +1,106 @@
+/* /!\ You need to add vendor prefixes in order to render the CSS properly (or simply use http://leaverou.github.io/prefixfree/) /!\ */ #tridiv {
+  perspective: 800px;
+  position: absolute;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  font-size: 100%;
+}
+.face {
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.4);
+}
+.scene, .shape, .face, .face-wrapper, .cr {
+  position: absolute;
+  transform-style: preserve-3d;
+}
+.scene {
+  width: 80em;
+  height: 80em;
+  top: 50%;
+  left: 50%;
+  margin: -40em 0 0 -40em;
+}
+.shape {
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  transform-origin: 50%;
+}
+.face, .face-wrapper {
+  overflow: hidden;
+  transform-origin: 0 0;
+  backface-visibility: hidden;
+  /* hidden by default, prevent blinking and other weird rendering glitchs */
+}
+.face {
+  background-size: 100% 100%!important;
+  background-position: center;
+}
+.face-wrapper .face {
+  left: 100%;
+  width: 100%;
+  height: 100%
+}
+.photon-shader {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%
+}
+.side {
+  left: 50%;
+}
+.cr, .cr .side {
+  height: 100%;
+}
+[class*="pyramid"] .face-wrapper .face {
+  transform: rotateZ(45deg) translateX(-35.35%) translateY(35.35%);
+}
+[class*="pyramid"] .bk {
+  left: 100%;
+}
+[class*="pyramid"] .bm {
+  top: 100%;
+  transform: rotateX(-90deg) translateY(-50%);
+}
+[class*="pyramid"] .rt, [class*="pyramid"] .lt {
+  transform-origin: 50% 0;
+}
+/* .pyr-1 styles */
+.pyr-1 {
+  transform:translate3D(4.375em, 0em, -1.5625em) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+  opacity:1;
+  width:4em;
+  height:5em;
+  margin:-2.5em 0 0 -2em;
+}
+.pyr-1 .face-wrapper {
+  width:4em;
+  height:2em;
+}
+.pyr-1 .face-wrapper .face {
+  width:4em;
+  height:4em;
+}
+.pyr-1 .ft {
+  transform:scaleZ(2.692582403567252) scaleY(2.692582403567252) rotateX(21.801409486351798deg);
+}
+.pyr-1 .bk {
+  transform:scaleZ(2.692582403567252) scaleY(2.692582403567252) rotateX(-21.801409486351798deg) rotateY(180deg);
+}
+.pyr-1 .rt {
+  transform:scaleX(2.692582403567252) scaleY(2.692582403567252) rotateZ(21.801409486351798deg) rotateY(-90deg);
+}
+.pyr-1 .lt {
+  transform:scaleX(2.692582403567252) scaleY(2.692582403567252) rotateZ(-21.801409486351798deg) rotateY(90deg);
+}
+.pyr-1 .bm {
+  width:4em;
+  height:4em;
+}
+.pyr-1 .face {
+  background-color:#FFFFFF;
+}
