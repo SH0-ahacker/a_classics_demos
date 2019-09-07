@@ -1,0 +1,907 @@
+<html lang="en" class="no-js" tabindex="0"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+  <title>hexedit</title>
+
+  <meta name="description" content="hug + hack = infinity">
+  <meta name="author" content="jankenpopp, zombectro">
+  <meta http-equiv="Content-Language" content="en_US">
+  <meta name="google" content="notranslate">
+  <link href="/rss" rel="alternate" type="application/rss+xml" title="windows93">
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.3.4">
+
+  <link rel="stylesheet" href="/c/sys42.css?v=2.3.4">
+  <link rel="stylesheet" href="/c/sys/skins/w93.css?v=2.3.4" id="w93_skin">
+  <link rel="stylesheet" href="/sys/hotfix.css?v=2.3.4"><style>
+footer, pre, #ed_ui_binedit button {
+  font-family: _tomo, monospace;
+  //font-size: 10px;
+}
+pre {
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  padding: 0;
+  padding-top: 0.5ch;
+  padding-bottom: 2ch;
+  margin: 0;
+  overflow: hidden;
+}
+pre:focus {
+  outline: 0 none;
+  background-color: #fff;
+}
+pre {
+  padding-left: 0.5ch;
+  padding-left: 0.5ch;
+}
+#ed_section {
+  background-color: #eee;
+  outline: 0 none;
+  display: flex;
+  flex-direction: row;
+  align-content: stretch;
+  overflow-y: hidden;
+  overflow-x: auto;
+
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 8px;
+  width: auto;
+  height: auto;
+}
+
+#ed_addr {
+  background-color: rgb(136, 135, 155);
+  color: rgb(220, 218, 255);
+  padding-left: 1ch;
+  padding-left: 1ch;
+  width: 10ch;
+  min-width: 10ch;
+}
+#ed_addr span {
+  display: block
+}
+#ed_hexa {
+  width: calc(32ch + (16 * 4px) + 2ch);
+  min-width: calc(32ch + (16 * 4px) + 2ch);
+}
+#ed_ascii {
+  width: calc(16ch + (16 * 2px) + 1ch);
+  min-width: calc(16ch + (16 * 2px) + 1ch);
+}
+#ed_ascii span {
+  display: inline-block;
+  text-align: center;
+  padding-left: 1px;
+  padding-right: 1px;
+}
+#ed_hexa span {
+  display: inline-block;
+  padding-left: 2px;
+  padding-right: 2px;
+}
+/*#ed_hexa span:nth-child(odd) {
+  opacity: 0.6;
+}*/
+#ed_hexa span:nth-child(16n-8) {
+  margin-right: 1ch;
+}
+.noprint {
+  color: rgba(255,0,255,0.5);
+  opacity: 0.6;
+}
+.edited {
+  background-color: rgb(202, 202, 255); //rgb(170, 170, 255);
+}
+span.selected {
+  //background-color: rgb(200, 0, 200);
+  //color: #fff;
+  opacity: 1 !important;
+  position: relative;
+  z-index: 5;
+  box-shadow: 0 0 0 1px rgb(200, 0, 200);
+}
+@-webkit-keyframes anim_cursor {
+  0% {box-shadow: 0 0 0 1px rgba(200, 0, 200, 1);}
+  30% {box-shadow: 0 0 0 1px rgba(10, 0, 100, 0);}
+  31% {box-shadow: 0 0 0 1px rgba(10, 0, 100, 0);}
+  100% {box-shadow: 0 0 0 1px rgba(200, 0, 200, 1);}
+}
+@keyframes anim_cursor {
+  0% {box-shadow: 0 0 0 1px rgba(200, 0, 200, 1);}
+  30% {box-shadow: 0 0 0 1px rgba(10, 0, 100, 0);}
+  31% {box-shadow: 0 0 0 1px rgba(10, 0, 100, 0);}
+  100% {box-shadow: 0 0 0 1px rgba(200, 0, 200, 1);}
+}
+span.selected_edit {
+  /*animation:anim_cursor 1s linear infinite;
+  -webkit-animation:anim_cursor 1s linear infinite;*/
+  box-shadow: 0 0 0 1px rgb(255, 200, 255), 0 0 0 2px rgb(200, 0, 200);
+}
+/*@-webkit-keyframes anim_cursor {
+  0% {background-color: rgb(200, 0, 200);}
+  50% {background-color: rgb(200, 0, 200);}
+  51% {background-color: rgb(100, 0, 100);}
+  100% {background-color: rgb(100, 0, 100);}
+}
+@keyframes anim_cursor {
+  0% {background-color: rgb(200, 0, 200);}
+  50% {background-color: rgb(200, 0, 200);}
+  51% {background-color: rgb(100, 0, 100);}
+  100% {background-color: rgb(100, 0, 100);}
+}
+span.selected_edit {
+  animation:anim_cursor 1s linear infinite;
+  -webkit-animation:anim_cursor 1s linear infinite;
+}*/
+span.over,
+#ed_hexa span:hover,
+#ed_ascii span:hover {
+  /*color: #fff;
+  background-color: rgb(100, 100, 255);*/
+  opacity: 1 !important;
+  position: relative;
+  z-index: 5;
+  box-shadow: 0 0 0 1px rgb(50, 50, 255);
+}
+span.over.selected_edit,
+#ed_hexa span.selected_edit:hover,
+#ed_ascii span.selected_edit:hover {
+  box-shadow: 0 0 0 1px rgb(50, 50, 255), 0 0 0 2px rgb(200, 0, 200);
+}
+
+#ed_ui_binedit button {
+  display: inline-block;
+  width: calc(2ch + 3px);
+  height: calc(2ch + 3px);
+  border-radius: 2ch;
+  padding: 0;
+  line-height: 8px;
+  padding-bottom: 2px;
+  outline: 0 none;
+}
+
+#ed_ui_scrolltrack {
+  background-color: rgb(220, 218, 255);
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 8px;
+  height: auto;
+}
+#ed_ui_scrollbar {
+  background-color: rgb(136, 135, 155);
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 8px;
+  height: 20px;
+}
+
+html, body {
+  overflow: hidden;
+}
+</style></head>
+
+
+<body class="skin_light">
+
+<div class="ui_layout">
+  <section>
+    <div id="ed_section" data-wheel-id="1">
+      <pre id="ed_addr"><span>00000000</span><span>00000010</span><span>00000020</span><span>00000030</span><span>00000040</span><span>00000050</span><span>00000060</span><span>00000070</span><span>00000080</span><span>00000090</span><span>000000a0</span><span>000000b0</span><span>000000c0</span><span>000000d0</span><span>000000e0</span><span>000000f0</span><span>00000100</span><span>00000110</span><span>00000120</span><span>00000130</span><span>00000140</span><span>00000150</span><span>00000160</span><span>00000170</span><span>00000180</span><span>00000190</span><span>000001a0</span><span>000001b0</span><span>000001c0</span><span>000001d0</span><span>000001e0</span><span>000001f0</span></pre><pre class="_cursor_crosshair" tabindex="1" id="ed_hexa"><span data-offset="0" class="selected selected_edit">00</span><span data-offset="1" class="">01</span><span data-offset="2" class="">02</span><span data-offset="3" class="">03</span><span data-offset="4" class="">04</span><span data-offset="5" class="">05</span><span data-offset="6" class="">06</span><span data-offset="7" class="">07</span><span data-offset="8" class="">08</span><span data-offset="9" class="">09</span><span data-offset="10" class="">0a</span><span data-offset="11" class="">0b</span><span data-offset="12" class="">0c</span><span data-offset="13" class="">0d</span><span data-offset="14" class="">0e</span><span data-offset="15" class="">0f</span><span data-offset="16" class="">10</span><span data-offset="17" class="">11</span><span data-offset="18" class="">12</span><span data-offset="19" class="">13</span><span data-offset="20" class="">14</span><span data-offset="21" class="">15</span><span data-offset="22" class="">16</span><span data-offset="23" class="">17</span><span data-offset="24" class="">18</span><span data-offset="25" class="">19</span><span data-offset="26" class="">1a</span><span data-offset="27" class="">1b</span><span data-offset="28" class="">1c</span><span data-offset="29" class="">1d</span><span data-offset="30" class="">1e</span><span data-offset="31" class="">1f</span><span data-offset="32" class="">20</span><span data-offset="33" class="">21</span><span data-offset="34" class="">22</span><span data-offset="35" class="">23</span><span data-offset="36" class="">24</span><span data-offset="37" class="">25</span><span data-offset="38" class="">26</span><span data-offset="39" class="">27</span><span data-offset="40" class="">28</span><span data-offset="41" class="">29</span><span data-offset="42" class="">2a</span><span data-offset="43" class="">2b</span><span data-offset="44" class="">2c</span><span data-offset="45" class="">2d</span><span data-offset="46" class="">2e</span><span data-offset="47" class="">2f</span><span data-offset="48" class="">30</span><span data-offset="49" class="">31</span><span data-offset="50" class="">32</span><span data-offset="51" class="">33</span><span data-offset="52" class="">34</span><span data-offset="53" class="">35</span><span data-offset="54" class="">36</span><span data-offset="55" class="">37</span><span data-offset="56" class="">38</span><span data-offset="57" class="">39</span><span data-offset="58" class="">3a</span><span data-offset="59" class="">3b</span><span data-offset="60" class="">3c</span><span data-offset="61" class="">3d</span><span data-offset="62" class="">3e</span><span data-offset="63" class="">3f</span><span data-offset="64" class="">40</span><span data-offset="65" class="">41</span><span data-offset="66" class="">42</span><span data-offset="67" class="">43</span><span data-offset="68" class="">44</span><span data-offset="69" class="">45</span><span data-offset="70" class="">46</span><span data-offset="71" class="">47</span><span data-offset="72" class="">48</span><span data-offset="73" class="">49</span><span data-offset="74" class="">4a</span><span data-offset="75" class="">4b</span><span data-offset="76" class="">4c</span><span data-offset="77" class="">4d</span><span data-offset="78" class="">4e</span><span data-offset="79" class="">4f</span><span data-offset="80" class="">50</span><span data-offset="81" class="">51</span><span data-offset="82" class="">52</span><span data-offset="83" class="">53</span><span data-offset="84" class="">54</span><span data-offset="85" class="">55</span><span data-offset="86" class="">56</span><span data-offset="87" class="">57</span><span data-offset="88" class="">58</span><span data-offset="89" class="">59</span><span data-offset="90" class="">5a</span><span data-offset="91" class="">5b</span><span data-offset="92" class="">5c</span><span data-offset="93" class="">5d</span><span data-offset="94" class="">5e</span><span data-offset="95" class="">5f</span><span data-offset="96" class="">60</span><span data-offset="97" class="">61</span><span data-offset="98" class="">62</span><span data-offset="99" class="">63</span><span data-offset="100" class="">64</span><span data-offset="101" class="">65</span><span data-offset="102" class="">66</span><span data-offset="103" class="">67</span><span data-offset="104" class="">68</span><span data-offset="105" class="">69</span><span data-offset="106" class="">6a</span><span data-offset="107" class="">6b</span><span data-offset="108" class="">6c</span><span data-offset="109" class="">6d</span><span data-offset="110" class="">6e</span><span data-offset="111" class="">6f</span><span data-offset="112" class="">70</span><span data-offset="113" class="">71</span><span data-offset="114" class="">72</span><span data-offset="115" class="">73</span><span data-offset="116" class="">74</span><span data-offset="117" class="">75</span><span data-offset="118" class="">76</span><span data-offset="119" class="">77</span><span data-offset="120" class="">78</span><span data-offset="121" class="">79</span><span data-offset="122" class="">7a</span><span data-offset="123" class="">7b</span><span data-offset="124" class="">7c</span><span data-offset="125" class="">7d</span><span data-offset="126" class="">7e</span><span data-offset="127" class="">7f</span><span data-offset="128" class="">80</span><span data-offset="129" class="">81</span><span data-offset="130" class="">82</span><span data-offset="131" class="">83</span><span data-offset="132" class="">84</span><span data-offset="133" class="">85</span><span data-offset="134" class="">86</span><span data-offset="135" class="">87</span><span data-offset="136" class="">88</span><span data-offset="137" class="">89</span><span data-offset="138" class="">8a</span><span data-offset="139" class="">8b</span><span data-offset="140" class="">8c</span><span data-offset="141" class="">8d</span><span data-offset="142" class="">8e</span><span data-offset="143" class="">8f</span><span data-offset="144" class="">90</span><span data-offset="145" class="">91</span><span data-offset="146" class="">92</span><span data-offset="147" class="">93</span><span data-offset="148" class="">94</span><span data-offset="149" class="">95</span><span data-offset="150" class="">96</span><span data-offset="151" class="">97</span><span data-offset="152" class="">98</span><span data-offset="153" class="">99</span><span data-offset="154" class="">9a</span><span data-offset="155" class="">9b</span><span data-offset="156" class="">9c</span><span data-offset="157" class="">9d</span><span data-offset="158" class="">9e</span><span data-offset="159" class="">9f</span><span data-offset="160" class="">a0</span><span data-offset="161" class="">a1</span><span data-offset="162" class="">a2</span><span data-offset="163" class="">a3</span><span data-offset="164" class="">a4</span><span data-offset="165" class="">a5</span><span data-offset="166" class="">a6</span><span data-offset="167" class="">a7</span><span data-offset="168" class="">a8</span><span data-offset="169" class="">a9</span><span data-offset="170" class="">aa</span><span data-offset="171" class="">ab</span><span data-offset="172" class="">ac</span><span data-offset="173" class="">ad</span><span data-offset="174" class="">ae</span><span data-offset="175" class="">af</span><span data-offset="176" class="">b0</span><span data-offset="177" class="">b1</span><span data-offset="178" class="">b2</span><span data-offset="179" class="">b3</span><span data-offset="180" class="">b4</span><span data-offset="181" class="">b5</span><span data-offset="182" class="">b6</span><span data-offset="183" class="">b7</span><span data-offset="184" class="">b8</span><span data-offset="185" class="">b9</span><span data-offset="186" class="">ba</span><span data-offset="187" class="">bb</span><span data-offset="188" class="">bc</span><span data-offset="189" class="">bd</span><span data-offset="190" class="">be</span><span data-offset="191" class="">bf</span><span data-offset="192" class="">c0</span><span data-offset="193" class="">c1</span><span data-offset="194" class="">c2</span><span data-offset="195" class="">c3</span><span data-offset="196" class="">c4</span><span data-offset="197" class="">c5</span><span data-offset="198" class="">c6</span><span data-offset="199" class="">c7</span><span data-offset="200" class="">c8</span><span data-offset="201" class="">c9</span><span data-offset="202" class="">ca</span><span data-offset="203" class="">cb</span><span data-offset="204" class="">cc</span><span data-offset="205" class="">cd</span><span data-offset="206" class="">ce</span><span data-offset="207" class="">cf</span><span data-offset="208" class="">d0</span><span data-offset="209" class="">d1</span><span data-offset="210" class="">d2</span><span data-offset="211" class="">d3</span><span data-offset="212" class="">d4</span><span data-offset="213" class="">d5</span><span data-offset="214" class="">d6</span><span data-offset="215" class="">d7</span><span data-offset="216" class="">d8</span><span data-offset="217" class="">d9</span><span data-offset="218" class="">da</span><span data-offset="219" class="">db</span><span data-offset="220" class="">dc</span><span data-offset="221" class="">dd</span><span data-offset="222" class="">de</span><span data-offset="223" class="">df</span><span data-offset="224" class="">e0</span><span data-offset="225" class="">e1</span><span data-offset="226" class="">e2</span><span data-offset="227" class="">e3</span><span data-offset="228" class="">e4</span><span data-offset="229" class="">e5</span><span data-offset="230" class="">e6</span><span data-offset="231" class="">e7</span><span data-offset="232" class="">e8</span><span data-offset="233" class="">e9</span><span data-offset="234" class="">ea</span><span data-offset="235" class="">eb</span><span data-offset="236" class="">ec</span><span data-offset="237" class="">ed</span><span data-offset="238" class="">ee</span><span data-offset="239" class="">ef</span><span data-offset="240" class="">f0</span><span data-offset="241" class="">f1</span><span data-offset="242" class="">f2</span><span data-offset="243" class="">f3</span><span data-offset="244" class="">f4</span><span data-offset="245" class="">f5</span><span data-offset="246" class="">f6</span><span data-offset="247" class="">f7</span><span data-offset="248" class="">f8</span><span data-offset="249" class="">f9</span><span data-offset="250" class="">fa</span><span data-offset="251" class="">fb</span><span data-offset="252" class="">fc</span><span data-offset="253" class="">fd</span><span data-offset="254" class="">fe</span><span data-offset="255" class="">ff</span><span data-offset="256" class="invisible">..</span><span data-offset="257" class="invisible">..</span><span data-offset="258" class="invisible">..</span><span data-offset="259" class="invisible">..</span><span data-offset="260" class="invisible">..</span><span data-offset="261" class="invisible">..</span><span data-offset="262" class="invisible">..</span><span data-offset="263" class="invisible">..</span><span data-offset="264" class="invisible">..</span><span data-offset="265" class="invisible">..</span><span data-offset="266" class="invisible">..</span><span data-offset="267" class="invisible">..</span><span data-offset="268" class="invisible">..</span><span data-offset="269" class="invisible">..</span><span data-offset="270" class="invisible">..</span><span data-offset="271" class="invisible">..</span><span data-offset="272" class="invisible">..</span><span data-offset="273" class="invisible">..</span><span data-offset="274" class="invisible">..</span><span data-offset="275" class="invisible">..</span><span data-offset="276" class="invisible">..</span><span data-offset="277" class="invisible">..</span><span data-offset="278" class="invisible">..</span><span data-offset="279" class="invisible">..</span><span data-offset="280" class="invisible">..</span><span data-offset="281" class="invisible">..</span><span data-offset="282" class="invisible">..</span><span data-offset="283" class="invisible">..</span><span data-offset="284" class="invisible">..</span><span data-offset="285" class="invisible">..</span><span data-offset="286" class="invisible">..</span><span data-offset="287" class="invisible">..</span><span data-offset="288" class="invisible">..</span><span data-offset="289" class="invisible">..</span><span data-offset="290" class="invisible">..</span><span data-offset="291" class="invisible">..</span><span data-offset="292" class="invisible">..</span><span data-offset="293" class="invisible">..</span><span data-offset="294" class="invisible">..</span><span data-offset="295" class="invisible">..</span><span data-offset="296" class="invisible">..</span><span data-offset="297" class="invisible">..</span><span data-offset="298" class="invisible">..</span><span data-offset="299" class="invisible">..</span><span data-offset="300" class="invisible">..</span><span data-offset="301" class="invisible">..</span><span data-offset="302" class="invisible">..</span><span data-offset="303" class="invisible">..</span><span data-offset="304" class="invisible">..</span><span data-offset="305" class="invisible">..</span><span data-offset="306" class="invisible">..</span><span data-offset="307" class="invisible">..</span><span data-offset="308" class="invisible">..</span><span data-offset="309" class="invisible">..</span><span data-offset="310" class="invisible">..</span><span data-offset="311" class="invisible">..</span><span data-offset="312" class="invisible">..</span><span data-offset="313" class="invisible">..</span><span data-offset="314" class="invisible">..</span><span data-offset="315" class="invisible">..</span><span data-offset="316" class="invisible">..</span><span data-offset="317" class="invisible">..</span><span data-offset="318" class="invisible">..</span><span data-offset="319" class="invisible">..</span><span data-offset="320" class="invisible">..</span><span data-offset="321" class="invisible">..</span><span data-offset="322" class="invisible">..</span><span data-offset="323" class="invisible">..</span><span data-offset="324" class="invisible">..</span><span data-offset="325" class="invisible">..</span><span data-offset="326" class="invisible">..</span><span data-offset="327" class="invisible">..</span><span data-offset="328" class="invisible">..</span><span data-offset="329" class="invisible">..</span><span data-offset="330" class="invisible">..</span><span data-offset="331" class="invisible">..</span><span data-offset="332" class="invisible">..</span><span data-offset="333" class="invisible">..</span><span data-offset="334" class="invisible">..</span><span data-offset="335" class="invisible">..</span><span data-offset="336" class="invisible">..</span><span data-offset="337" class="invisible">..</span><span data-offset="338" class="invisible">..</span><span data-offset="339" class="invisible">..</span><span data-offset="340" class="invisible">..</span><span data-offset="341" class="invisible">..</span><span data-offset="342" class="invisible">..</span><span data-offset="343" class="invisible">..</span><span data-offset="344" class="invisible">..</span><span data-offset="345" class="invisible">..</span><span data-offset="346" class="invisible">..</span><span data-offset="347" class="invisible">..</span><span data-offset="348" class="invisible">..</span><span data-offset="349" class="invisible">..</span><span data-offset="350" class="invisible">..</span><span data-offset="351" class="invisible">..</span><span data-offset="352" class="invisible">..</span><span data-offset="353" class="invisible">..</span><span data-offset="354" class="invisible">..</span><span data-offset="355" class="invisible">..</span><span data-offset="356" class="invisible">..</span><span data-offset="357" class="invisible">..</span><span data-offset="358" class="invisible">..</span><span data-offset="359" class="invisible">..</span><span data-offset="360" class="invisible">..</span><span data-offset="361" class="invisible">..</span><span data-offset="362" class="invisible">..</span><span data-offset="363" class="invisible">..</span><span data-offset="364" class="invisible">..</span><span data-offset="365" class="invisible">..</span><span data-offset="366" class="invisible">..</span><span data-offset="367" class="invisible">..</span><span data-offset="368" class="invisible">..</span><span data-offset="369" class="invisible">..</span><span data-offset="370" class="invisible">..</span><span data-offset="371" class="invisible">..</span><span data-offset="372" class="invisible">..</span><span data-offset="373" class="invisible">..</span><span data-offset="374" class="invisible">..</span><span data-offset="375" class="invisible">..</span><span data-offset="376" class="invisible">..</span><span data-offset="377" class="invisible">..</span><span data-offset="378" class="invisible">..</span><span data-offset="379" class="invisible">..</span><span data-offset="380" class="invisible">..</span><span data-offset="381" class="invisible">..</span><span data-offset="382" class="invisible">..</span><span data-offset="383" class="invisible">..</span><span data-offset="384" class="invisible">..</span><span data-offset="385" class="invisible">..</span><span data-offset="386" class="invisible">..</span><span data-offset="387" class="invisible">..</span><span data-offset="388" class="invisible">..</span><span data-offset="389" class="invisible">..</span><span data-offset="390" class="invisible">..</span><span data-offset="391" class="invisible">..</span><span data-offset="392" class="invisible">..</span><span data-offset="393" class="invisible">..</span><span data-offset="394" class="invisible">..</span><span data-offset="395" class="invisible">..</span><span data-offset="396" class="invisible">..</span><span data-offset="397" class="invisible">..</span><span data-offset="398" class="invisible">..</span><span data-offset="399" class="invisible">..</span><span data-offset="400" class="invisible">..</span><span data-offset="401" class="invisible">..</span><span data-offset="402" class="invisible">..</span><span data-offset="403" class="invisible">..</span><span data-offset="404" class="invisible">..</span><span data-offset="405" class="invisible">..</span><span data-offset="406" class="invisible">..</span><span data-offset="407" class="invisible">..</span><span data-offset="408" class="invisible">..</span><span data-offset="409" class="invisible">..</span><span data-offset="410" class="invisible">..</span><span data-offset="411" class="invisible">..</span><span data-offset="412" class="invisible">..</span><span data-offset="413" class="invisible">..</span><span data-offset="414" class="invisible">..</span><span data-offset="415" class="invisible">..</span><span data-offset="416" class="invisible">..</span><span data-offset="417" class="invisible">..</span><span data-offset="418" class="invisible">..</span><span data-offset="419" class="invisible">..</span><span data-offset="420" class="invisible">..</span><span data-offset="421" class="invisible">..</span><span data-offset="422" class="invisible">..</span><span data-offset="423" class="invisible">..</span><span data-offset="424" class="invisible">..</span><span data-offset="425" class="invisible">..</span><span data-offset="426" class="invisible">..</span><span data-offset="427" class="invisible">..</span><span data-offset="428" class="invisible">..</span><span data-offset="429" class="invisible">..</span><span data-offset="430" class="invisible">..</span><span data-offset="431" class="invisible">..</span><span data-offset="432" class="invisible">..</span><span data-offset="433" class="invisible">..</span><span data-offset="434" class="invisible">..</span><span data-offset="435" class="invisible">..</span><span data-offset="436" class="invisible">..</span><span data-offset="437" class="invisible">..</span><span data-offset="438" class="invisible">..</span><span data-offset="439" class="invisible">..</span><span data-offset="440" class="invisible">..</span><span data-offset="441" class="invisible">..</span><span data-offset="442" class="invisible">..</span><span data-offset="443" class="invisible">..</span><span data-offset="444" class="invisible">..</span><span data-offset="445" class="invisible">..</span><span data-offset="446" class="invisible">..</span><span data-offset="447" class="invisible">..</span><span data-offset="448" class="invisible">..</span><span data-offset="449" class="invisible">..</span><span data-offset="450" class="invisible">..</span><span data-offset="451" class="invisible">..</span><span data-offset="452" class="invisible">..</span><span data-offset="453" class="invisible">..</span><span data-offset="454" class="invisible">..</span><span data-offset="455" class="invisible">..</span><span data-offset="456" class="invisible">..</span><span data-offset="457" class="invisible">..</span><span data-offset="458" class="invisible">..</span><span data-offset="459" class="invisible">..</span><span data-offset="460" class="invisible">..</span><span data-offset="461" class="invisible">..</span><span data-offset="462" class="invisible">..</span><span data-offset="463" class="invisible">..</span><span data-offset="464" class="invisible">..</span><span data-offset="465" class="invisible">..</span><span data-offset="466" class="invisible">..</span><span data-offset="467" class="invisible">..</span><span data-offset="468" class="invisible">..</span><span data-offset="469" class="invisible">..</span><span data-offset="470" class="invisible">..</span><span data-offset="471" class="invisible">..</span><span data-offset="472" class="invisible">..</span><span data-offset="473" class="invisible">..</span><span data-offset="474" class="invisible">..</span><span data-offset="475" class="invisible">..</span><span data-offset="476" class="invisible">..</span><span data-offset="477" class="invisible">..</span><span data-offset="478" class="invisible">..</span><span data-offset="479" class="invisible">..</span><span data-offset="480" class="invisible">..</span><span data-offset="481" class="invisible">..</span><span data-offset="482" class="invisible">..</span><span data-offset="483" class="invisible">..</span><span data-offset="484" class="invisible">..</span><span data-offset="485" class="invisible">..</span><span data-offset="486" class="invisible">..</span><span data-offset="487" class="invisible">..</span><span data-offset="488" class="invisible">..</span><span data-offset="489" class="invisible">..</span><span data-offset="490" class="invisible">..</span><span data-offset="491" class="invisible">..</span><span data-offset="492" class="invisible">..</span><span data-offset="493" class="invisible">..</span><span data-offset="494" class="invisible">..</span><span data-offset="495" class="invisible">..</span><span data-offset="496" class="invisible">..</span><span data-offset="497" class="invisible">..</span><span data-offset="498" class="invisible">..</span><span data-offset="499" class="invisible">..</span><span data-offset="500" class="invisible">..</span><span data-offset="501" class="invisible">..</span><span data-offset="502" class="invisible">..</span><span data-offset="503" class="invisible">..</span><span data-offset="504" class="invisible">..</span><span data-offset="505" class="invisible">..</span><span data-offset="506" class="invisible">..</span><span data-offset="507" class="invisible">..</span><span data-offset="508" class="invisible">..</span><span data-offset="509" class="invisible">..</span><span data-offset="510" class="invisible">..</span><span data-offset="511" class="invisible">..</span></pre><pre class="_cursor_crosshair" tabindex="2" id="ed_ascii"><span data-offset="0" class="noprint selected">·</span><span data-offset="1" class="noprint">·</span><span data-offset="2" class="noprint">·</span><span data-offset="3" class="noprint">·</span><span data-offset="4" class="noprint">·</span><span data-offset="5" class="noprint">·</span><span data-offset="6" class="noprint">·</span><span data-offset="7" class="noprint">·</span><span data-offset="8" class="noprint">·</span><span data-offset="9" class="noprint">·</span><span data-offset="10" class="noprint">·</span><span data-offset="11" class="noprint">·</span><span data-offset="12" class="noprint">·</span><span data-offset="13" class="noprint">·</span><span data-offset="14" class="noprint">·</span><span data-offset="15" class="noprint">·</span><span data-offset="16" class="noprint">·</span><span data-offset="17" class="noprint">·</span><span data-offset="18" class="noprint">·</span><span data-offset="19" class="noprint">·</span><span data-offset="20" class="noprint">·</span><span data-offset="21" class="noprint">·</span><span data-offset="22" class="noprint">·</span><span data-offset="23" class="noprint">·</span><span data-offset="24" class="noprint">·</span><span data-offset="25" class="noprint">·</span><span data-offset="26" class="noprint">·</span><span data-offset="27" class="noprint">·</span><span data-offset="28" class="noprint">·</span><span data-offset="29" class="noprint">·</span><span data-offset="30" class="noprint">·</span><span data-offset="31" class="noprint">·</span><span data-offset="32" class=""> </span><span data-offset="33" class="">!</span><span data-offset="34" class="">"</span><span data-offset="35" class="">#</span><span data-offset="36" class="">$</span><span data-offset="37" class="">%</span><span data-offset="38" class="">&amp;</span><span data-offset="39" class="">'</span><span data-offset="40" class="">(</span><span data-offset="41" class="">)</span><span data-offset="42" class="">*</span><span data-offset="43" class="">+</span><span data-offset="44" class="">,</span><span data-offset="45" class="">-</span><span data-offset="46" class="">.</span><span data-offset="47" class="">/</span><span data-offset="48" class="">0</span><span data-offset="49" class="">1</span><span data-offset="50" class="">2</span><span data-offset="51" class="">3</span><span data-offset="52" class="">4</span><span data-offset="53" class="">5</span><span data-offset="54" class="">6</span><span data-offset="55" class="">7</span><span data-offset="56" class="">8</span><span data-offset="57" class="">9</span><span data-offset="58" class="">:</span><span data-offset="59" class="">;</span><span data-offset="60" class="">&lt;</span><span data-offset="61" class="">=</span><span data-offset="62" class="">&gt;</span><span data-offset="63" class="">?</span><span data-offset="64" class="">@</span><span data-offset="65" class="">A</span><span data-offset="66" class="">B</span><span data-offset="67" class="">C</span><span data-offset="68" class="">D</span><span data-offset="69" class="">E</span><span data-offset="70" class="">F</span><span data-offset="71" class="">G</span><span data-offset="72" class="">H</span><span data-offset="73" class="">I</span><span data-offset="74" class="">J</span><span data-offset="75" class="">K</span><span data-offset="76" class="">L</span><span data-offset="77" class="">M</span><span data-offset="78" class="">N</span><span data-offset="79" class="">O</span><span data-offset="80" class="">P</span><span data-offset="81" class="">Q</span><span data-offset="82" class="">R</span><span data-offset="83" class="">S</span><span data-offset="84" class="">T</span><span data-offset="85" class="">U</span><span data-offset="86" class="">V</span><span data-offset="87" class="">W</span><span data-offset="88" class="">X</span><span data-offset="89" class="">Y</span><span data-offset="90" class="">Z</span><span data-offset="91" class="">[</span><span data-offset="92" class="">\</span><span data-offset="93" class="">]</span><span data-offset="94" class="">^</span><span data-offset="95" class="">_</span><span data-offset="96" class="">`</span><span data-offset="97" class="">a</span><span data-offset="98" class="">b</span><span data-offset="99" class="">c</span><span data-offset="100" class="">d</span><span data-offset="101" class="">e</span><span data-offset="102" class="">f</span><span data-offset="103" class="">g</span><span data-offset="104" class="">h</span><span data-offset="105" class="">i</span><span data-offset="106" class="">j</span><span data-offset="107" class="">k</span><span data-offset="108" class="">l</span><span data-offset="109" class="">m</span><span data-offset="110" class="">n</span><span data-offset="111" class="">o</span><span data-offset="112" class="">p</span><span data-offset="113" class="">q</span><span data-offset="114" class="">r</span><span data-offset="115" class="">s</span><span data-offset="116" class="">t</span><span data-offset="117" class="">u</span><span data-offset="118" class="">v</span><span data-offset="119" class="">w</span><span data-offset="120" class="">x</span><span data-offset="121" class="">y</span><span data-offset="122" class="">z</span><span data-offset="123" class="">{</span><span data-offset="124" class="">|</span><span data-offset="125" class="">}</span><span data-offset="126" class="">~</span><span data-offset="127" class="noprint">·</span><span data-offset="128" class="noprint">·</span><span data-offset="129" class="noprint">·</span><span data-offset="130" class="noprint">·</span><span data-offset="131" class="noprint">·</span><span data-offset="132" class="noprint">·</span><span data-offset="133" class="noprint">·</span><span data-offset="134" class="noprint">·</span><span data-offset="135" class="noprint">·</span><span data-offset="136" class="noprint">·</span><span data-offset="137" class="noprint">·</span><span data-offset="138" class="noprint">·</span><span data-offset="139" class="noprint">·</span><span data-offset="140" class="noprint">·</span><span data-offset="141" class="noprint">·</span><span data-offset="142" class="noprint">·</span><span data-offset="143" class="noprint">·</span><span data-offset="144" class="noprint">·</span><span data-offset="145" class="noprint">·</span><span data-offset="146" class="noprint">·</span><span data-offset="147" class="noprint">·</span><span data-offset="148" class="noprint">·</span><span data-offset="149" class="noprint">·</span><span data-offset="150" class="noprint">·</span><span data-offset="151" class="noprint">·</span><span data-offset="152" class="noprint">·</span><span data-offset="153" class="noprint">·</span><span data-offset="154" class="noprint">·</span><span data-offset="155" class="noprint">·</span><span data-offset="156" class="noprint">·</span><span data-offset="157" class="noprint">·</span><span data-offset="158" class="noprint">·</span><span data-offset="159" class="noprint">·</span><span data-offset="160" class="noprint">·</span><span data-offset="161" class="">¡</span><span data-offset="162" class="over">¢</span><span data-offset="163" class="">£</span><span data-offset="164" class="">¤</span><span data-offset="165" class="">¥</span><span data-offset="166" class="">¦</span><span data-offset="167" class="">§</span><span data-offset="168" class="">¨</span><span data-offset="169" class="">©</span><span data-offset="170" class="">ª</span><span data-offset="171" class="">«</span><span data-offset="172" class="">¬</span><span data-offset="173" class="noprint">·</span><span data-offset="174" class="">®</span><span data-offset="175" class="">¯</span><span data-offset="176" class="">°</span><span data-offset="177" class="">±</span><span data-offset="178" class="">²</span><span data-offset="179" class="">³</span><span data-offset="180" class="">´</span><span data-offset="181" class="">µ</span><span data-offset="182" class="">¶</span><span data-offset="183" class="">·</span><span data-offset="184" class="">¸</span><span data-offset="185" class="">¹</span><span data-offset="186" class="">º</span><span data-offset="187" class="">»</span><span data-offset="188" class="">¼</span><span data-offset="189" class="">½</span><span data-offset="190" class="">¾</span><span data-offset="191" class="">¿</span><span data-offset="192" class="">À</span><span data-offset="193" class="">Á</span><span data-offset="194" class="">Â</span><span data-offset="195" class="">Ã</span><span data-offset="196" class="">Ä</span><span data-offset="197" class="">Å</span><span data-offset="198" class="">Æ</span><span data-offset="199" class="">Ç</span><span data-offset="200" class="">È</span><span data-offset="201" class="">É</span><span data-offset="202" class="">Ê</span><span data-offset="203" class="">Ë</span><span data-offset="204" class="">Ì</span><span data-offset="205" class="">Í</span><span data-offset="206" class="">Î</span><span data-offset="207" class="">Ï</span><span data-offset="208" class="">Ð</span><span data-offset="209" class="">Ñ</span><span data-offset="210" class="">Ò</span><span data-offset="211" class="">Ó</span><span data-offset="212" class="">Ô</span><span data-offset="213" class="">Õ</span><span data-offset="214" class="">Ö</span><span data-offset="215" class="">×</span><span data-offset="216" class="">Ø</span><span data-offset="217" class="">Ù</span><span data-offset="218" class="">Ú</span><span data-offset="219" class="">Û</span><span data-offset="220" class="">Ü</span><span data-offset="221" class="">Ý</span><span data-offset="222" class="">Þ</span><span data-offset="223" class="">ß</span><span data-offset="224" class="">à</span><span data-offset="225" class="">á</span><span data-offset="226" class="">â</span><span data-offset="227" class="">ã</span><span data-offset="228" class="">ä</span><span data-offset="229" class="">å</span><span data-offset="230" class="">æ</span><span data-offset="231" class="">ç</span><span data-offset="232" class="">è</span><span data-offset="233" class="">é</span><span data-offset="234" class="">ê</span><span data-offset="235" class="">ë</span><span data-offset="236" class="">ì</span><span data-offset="237" class="">í</span><span data-offset="238" class="">î</span><span data-offset="239" class="">ï</span><span data-offset="240" class="">ð</span><span data-offset="241" class="">ñ</span><span data-offset="242" class="">ò</span><span data-offset="243" class="">ó</span><span data-offset="244" class="">ô</span><span data-offset="245" class="">õ</span><span data-offset="246" class="">ö</span><span data-offset="247" class="">÷</span><span data-offset="248" class="">ø</span><span data-offset="249" class="">ù</span><span data-offset="250" class="">ú</span><span data-offset="251" class="">û</span><span data-offset="252" class="">ü</span><span data-offset="253" class="">ý</span><span data-offset="254" class="">þ</span><span data-offset="255" class="">ÿ</span><span data-offset="256" class="invisible">.</span><span data-offset="257" class="invisible">.</span><span data-offset="258" class="invisible">.</span><span data-offset="259" class="invisible">.</span><span data-offset="260" class="invisible">.</span><span data-offset="261" class="invisible">.</span><span data-offset="262" class="invisible">.</span><span data-offset="263" class="invisible">.</span><span data-offset="264" class="invisible">.</span><span data-offset="265" class="invisible">.</span><span data-offset="266" class="invisible">.</span><span data-offset="267" class="invisible">.</span><span data-offset="268" class="invisible">.</span><span data-offset="269" class="invisible">.</span><span data-offset="270" class="invisible">.</span><span data-offset="271" class="invisible">.</span><span data-offset="272" class="invisible">.</span><span data-offset="273" class="invisible">.</span><span data-offset="274" class="invisible">.</span><span data-offset="275" class="invisible">.</span><span data-offset="276" class="invisible">.</span><span data-offset="277" class="invisible">.</span><span data-offset="278" class="invisible">.</span><span data-offset="279" class="invisible">.</span><span data-offset="280" class="invisible">.</span><span data-offset="281" class="invisible">.</span><span data-offset="282" class="invisible">.</span><span data-offset="283" class="invisible">.</span><span data-offset="284" class="invisible">.</span><span data-offset="285" class="invisible">.</span><span data-offset="286" class="invisible">.</span><span data-offset="287" class="invisible">.</span><span data-offset="288" class="invisible">.</span><span data-offset="289" class="invisible">.</span><span data-offset="290" class="invisible">.</span><span data-offset="291" class="invisible">.</span><span data-offset="292" class="invisible">.</span><span data-offset="293" class="invisible">.</span><span data-offset="294" class="invisible">.</span><span data-offset="295" class="invisible">.</span><span data-offset="296" class="invisible">.</span><span data-offset="297" class="invisible">.</span><span data-offset="298" class="invisible">.</span><span data-offset="299" class="invisible">.</span><span data-offset="300" class="invisible">.</span><span data-offset="301" class="invisible">.</span><span data-offset="302" class="invisible">.</span><span data-offset="303" class="invisible">.</span><span data-offset="304" class="invisible">.</span><span data-offset="305" class="invisible">.</span><span data-offset="306" class="invisible">.</span><span data-offset="307" class="invisible">.</span><span data-offset="308" class="invisible">.</span><span data-offset="309" class="invisible">.</span><span data-offset="310" class="invisible">.</span><span data-offset="311" class="invisible">.</span><span data-offset="312" class="invisible">.</span><span data-offset="313" class="invisible">.</span><span data-offset="314" class="invisible">.</span><span data-offset="315" class="invisible">.</span><span data-offset="316" class="invisible">.</span><span data-offset="317" class="invisible">.</span><span data-offset="318" class="invisible">.</span><span data-offset="319" class="invisible">.</span><span data-offset="320" class="invisible">.</span><span data-offset="321" class="invisible">.</span><span data-offset="322" class="invisible">.</span><span data-offset="323" class="invisible">.</span><span data-offset="324" class="invisible">.</span><span data-offset="325" class="invisible">.</span><span data-offset="326" class="invisible">.</span><span data-offset="327" class="invisible">.</span><span data-offset="328" class="invisible">.</span><span data-offset="329" class="invisible">.</span><span data-offset="330" class="invisible">.</span><span data-offset="331" class="invisible">.</span><span data-offset="332" class="invisible">.</span><span data-offset="333" class="invisible">.</span><span data-offset="334" class="invisible">.</span><span data-offset="335" class="invisible">.</span><span data-offset="336" class="invisible">.</span><span data-offset="337" class="invisible">.</span><span data-offset="338" class="invisible">.</span><span data-offset="339" class="invisible">.</span><span data-offset="340" class="invisible">.</span><span data-offset="341" class="invisible">.</span><span data-offset="342" class="invisible">.</span><span data-offset="343" class="invisible">.</span><span data-offset="344" class="invisible">.</span><span data-offset="345" class="invisible">.</span><span data-offset="346" class="invisible">.</span><span data-offset="347" class="invisible">.</span><span data-offset="348" class="invisible">.</span><span data-offset="349" class="invisible">.</span><span data-offset="350" class="invisible">.</span><span data-offset="351" class="invisible">.</span><span data-offset="352" class="invisible">.</span><span data-offset="353" class="invisible">.</span><span data-offset="354" class="invisible">.</span><span data-offset="355" class="invisible">.</span><span data-offset="356" class="invisible">.</span><span data-offset="357" class="invisible">.</span><span data-offset="358" class="invisible">.</span><span data-offset="359" class="invisible">.</span><span data-offset="360" class="invisible">.</span><span data-offset="361" class="invisible">.</span><span data-offset="362" class="invisible">.</span><span data-offset="363" class="invisible">.</span><span data-offset="364" class="invisible">.</span><span data-offset="365" class="invisible">.</span><span data-offset="366" class="invisible">.</span><span data-offset="367" class="invisible">.</span><span data-offset="368" class="invisible">.</span><span data-offset="369" class="invisible">.</span><span data-offset="370" class="invisible">.</span><span data-offset="371" class="invisible">.</span><span data-offset="372" class="invisible">.</span><span data-offset="373" class="invisible">.</span><span data-offset="374" class="invisible">.</span><span data-offset="375" class="invisible">.</span><span data-offset="376" class="invisible">.</span><span data-offset="377" class="invisible">.</span><span data-offset="378" class="invisible">.</span><span data-offset="379" class="invisible">.</span><span data-offset="380" class="invisible">.</span><span data-offset="381" class="invisible">.</span><span data-offset="382" class="invisible">.</span><span data-offset="383" class="invisible">.</span><span data-offset="384" class="invisible">.</span><span data-offset="385" class="invisible">.</span><span data-offset="386" class="invisible">.</span><span data-offset="387" class="invisible">.</span><span data-offset="388" class="invisible">.</span><span data-offset="389" class="invisible">.</span><span data-offset="390" class="invisible">.</span><span data-offset="391" class="invisible">.</span><span data-offset="392" class="invisible">.</span><span data-offset="393" class="invisible">.</span><span data-offset="394" class="invisible">.</span><span data-offset="395" class="invisible">.</span><span data-offset="396" class="invisible">.</span><span data-offset="397" class="invisible">.</span><span data-offset="398" class="invisible">.</span><span data-offset="399" class="invisible">.</span><span data-offset="400" class="invisible">.</span><span data-offset="401" class="invisible">.</span><span data-offset="402" class="invisible">.</span><span data-offset="403" class="invisible">.</span><span data-offset="404" class="invisible">.</span><span data-offset="405" class="invisible">.</span><span data-offset="406" class="invisible">.</span><span data-offset="407" class="invisible">.</span><span data-offset="408" class="invisible">.</span><span data-offset="409" class="invisible">.</span><span data-offset="410" class="invisible">.</span><span data-offset="411" class="invisible">.</span><span data-offset="412" class="invisible">.</span><span data-offset="413" class="invisible">.</span><span data-offset="414" class="invisible">.</span><span data-offset="415" class="invisible">.</span><span data-offset="416" class="invisible">.</span><span data-offset="417" class="invisible">.</span><span data-offset="418" class="invisible">.</span><span data-offset="419" class="invisible">.</span><span data-offset="420" class="invisible">.</span><span data-offset="421" class="invisible">.</span><span data-offset="422" class="invisible">.</span><span data-offset="423" class="invisible">.</span><span data-offset="424" class="invisible">.</span><span data-offset="425" class="invisible">.</span><span data-offset="426" class="invisible">.</span><span data-offset="427" class="invisible">.</span><span data-offset="428" class="invisible">.</span><span data-offset="429" class="invisible">.</span><span data-offset="430" class="invisible">.</span><span data-offset="431" class="invisible">.</span><span data-offset="432" class="invisible">.</span><span data-offset="433" class="invisible">.</span><span data-offset="434" class="invisible">.</span><span data-offset="435" class="invisible">.</span><span data-offset="436" class="invisible">.</span><span data-offset="437" class="invisible">.</span><span data-offset="438" class="invisible">.</span><span data-offset="439" class="invisible">.</span><span data-offset="440" class="invisible">.</span><span data-offset="441" class="invisible">.</span><span data-offset="442" class="invisible">.</span><span data-offset="443" class="invisible">.</span><span data-offset="444" class="invisible">.</span><span data-offset="445" class="invisible">.</span><span data-offset="446" class="invisible">.</span><span data-offset="447" class="invisible">.</span><span data-offset="448" class="invisible">.</span><span data-offset="449" class="invisible">.</span><span data-offset="450" class="invisible">.</span><span data-offset="451" class="invisible">.</span><span data-offset="452" class="invisible">.</span><span data-offset="453" class="invisible">.</span><span data-offset="454" class="invisible">.</span><span data-offset="455" class="invisible">.</span><span data-offset="456" class="invisible">.</span><span data-offset="457" class="invisible">.</span><span data-offset="458" class="invisible">.</span><span data-offset="459" class="invisible">.</span><span data-offset="460" class="invisible">.</span><span data-offset="461" class="invisible">.</span><span data-offset="462" class="invisible">.</span><span data-offset="463" class="invisible">.</span><span data-offset="464" class="invisible">.</span><span data-offset="465" class="invisible">.</span><span data-offset="466" class="invisible">.</span><span data-offset="467" class="invisible">.</span><span data-offset="468" class="invisible">.</span><span data-offset="469" class="invisible">.</span><span data-offset="470" class="invisible">.</span><span data-offset="471" class="invisible">.</span><span data-offset="472" class="invisible">.</span><span data-offset="473" class="invisible">.</span><span data-offset="474" class="invisible">.</span><span data-offset="475" class="invisible">.</span><span data-offset="476" class="invisible">.</span><span data-offset="477" class="invisible">.</span><span data-offset="478" class="invisible">.</span><span data-offset="479" class="invisible">.</span><span data-offset="480" class="invisible">.</span><span data-offset="481" class="invisible">.</span><span data-offset="482" class="invisible">.</span><span data-offset="483" class="invisible">.</span><span data-offset="484" class="invisible">.</span><span data-offset="485" class="invisible">.</span><span data-offset="486" class="invisible">.</span><span data-offset="487" class="invisible">.</span><span data-offset="488" class="invisible">.</span><span data-offset="489" class="invisible">.</span><span data-offset="490" class="invisible">.</span><span data-offset="491" class="invisible">.</span><span data-offset="492" class="invisible">.</span><span data-offset="493" class="invisible">.</span><span data-offset="494" class="invisible">.</span><span data-offset="495" class="invisible">.</span><span data-offset="496" class="invisible">.</span><span data-offset="497" class="invisible">.</span><span data-offset="498" class="invisible">.</span><span data-offset="499" class="invisible">.</span><span data-offset="500" class="invisible">.</span><span data-offset="501" class="invisible">.</span><span data-offset="502" class="invisible">.</span><span data-offset="503" class="invisible">.</span><span data-offset="504" class="invisible">.</span><span data-offset="505" class="invisible">.</span><span data-offset="506" class="invisible">.</span><span data-offset="507" class="invisible">.</span><span data-offset="508" class="invisible">.</span><span data-offset="509" class="invisible">.</span><span data-offset="510" class="invisible">.</span><span data-offset="511" class="invisible">.</span></pre>
+    </div>
+    <div id="ed_ui_scrolltrack"><div id="ed_ui_scrollbar" style="top: 0px;"></div></div>
+  </section>
+  <footer class="skin_base skin_outset mb1 mr1 pa2 pr5">
+    <span id="ed_ui_binedit" class="skin_base_text_info">
+      <button class="skin_outset">0</button><button class="skin_outset">0</button><button class="skin_outset">0</button><button class="skin_outset">0</button>&nbsp;<button class="skin_outset">0</button><button class="skin_outset">0</button><button class="skin_outset">0</button><button class="skin_outset">0</button>
+    </span>
+    <span class="skin_base_text_info" id="ed_nfo_offset">Offset : 0x0 (0)</span>&nbsp;
+    <div class="right">
+      <span class="skin_base_text_info" id="ed_nfo_addr">0</span>
+    </div>
+  </footer>
+</div>
+
+<script src="/c/sys42.js?v=2.3.4"></script><svg style="pointer-events: none; position: fixed; top: 0px; left: 0px; bottom: 0px; right: 0px; width: 100%; height: 100%; z-index: 1;"><polygon points="0,0 0,0 0,0" fill="transparent" style="pointer-events: auto;"></polygon></svg>
+
+<script>
+
+var
+  BLOB
+, ed_section = document.getElementById('ed_section')
+, ed_addr = document.getElementById('ed_addr')
+, ed_ascii = document.getElementById('ed_ascii')
+, ed_hexa = document.getElementById('ed_hexa')
+, ed_ui_scrollbar = document.getElementById('ed_ui_scrollbar')
+, ed_ui_binedit = document.getElementById('ed_ui_binedit')
+, ed_nfo_addr = document.getElementById('ed_nfo_addr')
+, ed_nfo_offset = document.getElementById('ed_nfo_offset')
+, span_byte = document.createElement('span')
+;
+
+var ED_HEIGTH;
+var CURRENT_LINES_NUMBER;
+var CURRENT_LIMIT;
+var CURRENT_START = 0;
+var CURRENT_SELECTED;
+var CURRENT_OFFSET = 0;
+
+function getLineHeight(element){
+  // thanks: http://stackoverflow.com/a/4515470
+   var temp = document.createElement(element.nodeName);
+   temp.setAttribute("style","margin:0px;padding:0px;font-family:"+element.style.fontFamily+";font-size:"+element.style.fontSize);
+   temp.innerHTML = "test";
+   temp = element.parentNode.appendChild(temp);
+   var ret = temp.clientHeight;
+   temp.parentNode.removeChild(temp);
+   return ret;
+}
+
+// must preload font-face before =_=
+var LINEHEIGHT = 12 // getLineHeight(ed_ascii);
+//console.log(LINEHEIGHT);
+
+function setConstants() {
+  ED_HEIGTH = ed_section.offsetHeight;
+  CURRENT_LINES_NUMBER = Math.floor((ED_HEIGTH) / LINEHEIGHT);
+}
+function reset() {
+  undoManager.clear();
+  CURRENT_START = 0;
+  ed_ui_scrollbar.style.top = '0px';
+}
+function init() {
+  setConstants();
+  createSpans();
+  if (BLOB) {
+    CURRENT_LIMIT = BLOB.size - ((CURRENT_LINES_NUMBER * 16)/2);
+    displayChunck(CURRENT_START);
+  }
+}
+
+var resize = $io.fn.debounce(function() {
+  init()
+}, 100);
+
+window.onresize = resize;
+
+// events
+/////////////////////////////////////////////////////////////////////////////
+
+$el(ed_section)
+  .on('mouseover', '#ed_hexa span, #ed_ascii span', function(arg) {
+    (this.parentNode.id === 'ed_hexa' ? ed_ascii : ed_hexa)
+      .querySelector('[data-offset="' + this.dataset.offset + '"]').classList.add('over');
+  })
+  .on('mouseout', '#ed_hexa span, #ed_ascii span', function(arg) {
+    removeOver();
+  })
+  .on('click', '#ed_hexa span, #ed_ascii span', function(arg) {
+    setCursor(this);
+  })
+;
+
+$wheel(ed_section, function(dt, factor) {
+  var start;
+  if (dt === -1) {
+    if (CURRENT_START + 16 * ~~factor < CURRENT_LIMIT) {
+      start = CURRENT_START + 16 * ~~factor;
+      displayChunck(start);
+    } else if (CURRENT_START + 16 < CURRENT_LIMIT) {
+      start = CURRENT_START + 16;
+      displayChunck(start);
+    }
+  } else if (CURRENT_START > 0) {
+    start = CURRENT_START - 16 * ~~factor;
+    if (start < 0) start = 0;
+    displayChunck(start);
+  }
+}, {acceleration: 30});
+
+
+var nibble = 0;
+$key(ed_section).down(function(key, code, event) {
+       if (key==='left')  moveCursor(-1);
+  else if (key==='right') moveCursor(1);
+  else if (key==='up')    moveCursor(-16);
+  else if (key==='down')  moveCursor(16);
+  else {
+    if (/num_\d/.test(key)) key = key.replace('num_',''), code = key.charCodeAt(0);
+    if (CURRENT_SELECTED.parentNode.id === 'ed_hexa') {
+      if (key==='space') {nibble++; if (nibble >= 2) moveCursor(1); return false};
+      if (key==='enter') {moveCursor(16); return false};
+      if (key==='backspace') {moveCursor(-1); return false};
+      key = key.toLowerCase();
+      if (key.length === 1 && isHexChar(key)) {
+        var text = CURRENT_SELECTED.textContent.split('');
+        text[nibble] = key
+        editOffset(text.join(''));
+        nibble++;
+        if (nibble === 2) moveCursor(1);
+      } else {
+        return false;
+      }
+    } else {
+      if (key==='space') key = ' ';
+      if (key==='enter') key = '\n';
+      if (key==='backspace') {moveCursor(-1); return false};
+      if (/tab|shift|ctrl|alt|altgr/.test(key)) return false;
+      if (key.length === 1) {
+        editOffset(asHex(key.charCodeAt(0)));
+        moveCursor(1);
+      }
+    }
+  }
+});
+
+
+var undoManager = $undo();
+
+function forEachEditedBytes(cb) {
+  undoManager.each(function(hist) {
+    cb(hist[0], hist[1]);
+  })
+}
+
+function displayEditedBytes() {
+  forEachEditedBytes(function(offset, hex) {
+    var c = offset - CURRENT_START;
+    if (c >= 0 && c <= CURRENT_LINES_NUMBER * 16) setOffset(offset, hex);
+  });
+}
+
+function editOffset(hex) {
+  setOffset(CURRENT_OFFSET, hex);
+  undoManager.add([CURRENT_OFFSET, hex]);
+
+  displayBinary(hex);
+}
+
+function setOffset(offset, hex) {
+  var asciiByteEL = ed_ascii.querySelector('[data-offset="' + (offset - CURRENT_START) + '"]');
+  var hexaByteEL = ed_hexa.querySelector('[data-offset="' + (offset - CURRENT_START) + '"]');
+  var asciiCode = parseInt(hex, 16);
+  if (isPrintable(asciiCode)) {
+    asciiByteEL.textContent = String.fromCharCode(asciiCode);
+    asciiByteEL.classList.remove('noprint');
+  } else {
+    asciiByteEL.textContent = '·';
+    asciiByteEL.classList.add('noprint');
+  }
+  asciiByteEL.classList.add('edited');
+  hexaByteEL.classList.add('edited');
+  hexaByteEL.textContent = hex;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+function moveCursor(dir, noretry) {
+  if (CURRENT_OFFSET + dir >= 0 && CURRENT_OFFSET + dir < BLOB.size) {
+    CURRENT_OFFSET += dir;
+    var n = CURRENT_SELECTED.parentNode.querySelector('[data-offset="' + (CURRENT_OFFSET - CURRENT_START) + '"]');
+
+    if (n) setCursor(n);
+    else if (!noretry) {
+      var start = CURRENT_START + (dir > 0 ? 16 : -16);
+      if (start < 0) start = 0;
+      displayChunck(start);
+    }
+  }
+}
+
+function setCursorByOffset(off) {
+  var n = ((CURRENT_SELECTED||'').parentNode || ed_hexa).querySelector('[data-offset="' + (off - CURRENT_START) + '"]');
+  if (n) setCursor(n);
+}
+
+function setCursor(el) {
+  nibble = 0;
+  selectByte(el.dataset.offset);
+  el.classList.add('selected_edit');
+  el.parentNode.focus();
+  CURRENT_SELECTED = el;
+}
+
+var asciiByteEL;
+var hexaByteEL;
+function selectByte(offset) {
+  CURRENT_OFFSET = CURRENT_START + offset*1;
+  removeSelect();
+  asciiByteEL = ed_ascii.querySelector('[data-offset="' + offset + '"]');
+  hexaByteEL = ed_hexa.querySelector('[data-offset="' + offset + '"]');
+  asciiByteEL.classList.add('selected');
+  hexaByteEL.classList.add('selected');
+  displayBinary(hexaByteEL.textContent);
+  displayOffset(CURRENT_OFFSET);
+}
+
+function displayOffset(off) {
+  ed_nfo_offset.innerHTML = 'Offset : 0x' + parseInt(off).toString(16) + ' (' + off + ')';
+}
+var bin_btns = ed_ui_binedit.querySelectorAll('button');
+function changeBinayBtn(el, bin) {
+  bin += '';
+  el.textContent = bin;
+  if (bin === '1')
+    el.classList.add('skin_inset'),
+    el.classList.remove('skin_outset');
+  else
+    el.classList.add('skin_outset'),
+    el.classList.remove('skin_inset');
+}
+function displayBinary(hex) {
+  var byt = (lpad(parseInt(hex.charAt(0), 16).toString(2), 4) + lpad(parseInt(hex.charAt(1), 16).toString(2), 4)).split('');
+  for (var i = 0, l = byt.length; i < l; i++) {
+    changeBinayBtn(bin_btns[i], byt[i]);
+  }
+}
+
+$io.arr.all(bin_btns, function(item) {
+  item.addEventListener('click', function() {
+    changeBinayBtn(this, this.textContent === '0' ? '1' : '0');
+    var byte1 = '';
+    var byte2 = '';
+    $io.arr.all(bin_btns, function(item) {
+      if (byte1.length < 4) {
+        byte1 += item.textContent;
+      } else {
+        byte2 += item.textContent;
+      }
+    });
+    //setOffset(CURRENT_OFFSET, parseInt(byte1, 2).toString(16) + parseInt(byte2, 2).toString(16));
+    editOffset(parseInt(byte1, 2).toString(16) + parseInt(byte2, 2).toString(16));
+  }, false);
+});
+
+// helpers
+/////////////////////////////////////////////////////////////////////////////
+function isPrintable(asciiCode) {
+  return (asciiCode >= 0x20 && asciiCode < 0x7f) || (asciiCode >= 0xa1 && asciiCode <= 0xff) && asciiCode !== 0xad;
+}
+function isHexChar(c) {
+  return (c >= 'a' && c <= 'f') || (c >= '0' && c <= '9');
+}
+function lpad(s, length, paddingChar) {
+  if (paddingChar == null) paddingChar = '0';
+  while (s.length < length) s = paddingChar + s;
+  return s;
+}
+function asHex(i) {
+  var h = parseInt(i).toString(16);
+  return (h.length % 2 != 0) ? '0' + h : h;
+}
+function removeOver() {
+  $io.arr.all(document.querySelectorAll('.over'), function(item) {item.classList.remove('over')});
+}
+function removeSelect() {
+  $io.arr.all(document.querySelectorAll('.selected'), function(item) {
+    item.classList.remove('selected');
+    item.classList.remove('selected_edit')});
+}
+
+
+// parse binary
+/////////////////////////////////////////////////////////////////////////////
+var asciiByteELs;
+var hexaByteELs;
+var addrByteELs;
+function createSpans() {
+  ed_ascii.innerHTML = '';
+  ed_hexa.innerHTML = '';
+  ed_addr.innerHTML = '';
+
+  var asciifrag = document.createDocumentFragment();
+  var hexafrag = document.createDocumentFragment();
+  var addrfrag = document.createDocumentFragment();
+  for (var i = 0; i < CURRENT_LINES_NUMBER * 16; i++) {
+    var asciiByteEL = span_byte.cloneNode(false);
+    var hexaByteEL = span_byte.cloneNode(false);
+    asciiByteEL.dataset.offset = i;
+    hexaByteEL.dataset.offset = i;
+    if (i % 16 == 0) {
+      var addrByteEL = span_byte.cloneNode(false);
+      addrByteEL.textContent = lpad(asHex(i), 8);
+      addrfrag.appendChild(addrByteEL);
+    }
+    asciifrag.appendChild(asciiByteEL);
+    hexafrag.appendChild(hexaByteEL);
+  }
+  ed_ascii.appendChild(asciifrag);
+  ed_hexa.appendChild(hexafrag);
+  ed_addr.appendChild(addrfrag);
+  asciiByteELs = ed_ascii.querySelectorAll('span');
+  hexaByteELs = ed_hexa.querySelectorAll('span');
+  addrByteELs = ed_addr.querySelectorAll('span');
+}
+
+function displayChunckFn(start) {
+  if (start < BLOB.size && start >= 0) {
+    var end = start + CURRENT_LINES_NUMBER * 16;
+    if (end > BLOB.size) end = BLOB.size;
+
+    $io.Blob.BinaryString(BLOB.slice(start, end), function(val) {
+
+      CURRENT_START = start;
+      ed_nfo_addr.textContent = CURRENT_START;
+      ed_ui_scrollbar.style.top = (CURRENT_START / CURRENT_LIMIT) * (ED_HEIGTH - ed_ui_scrollbar.offsetHeight) + 'px';
+
+      $io.arr.each(addrByteELs, function(item, i) {
+        item.textContent = lpad(asHex(CURRENT_START + i * 16), 8);
+      });
+
+      for (var i = 0; i < CURRENT_LINES_NUMBER * 16; i++) {
+        var asciiByteEL = asciiByteELs[i];
+        var hexaByteEL = hexaByteELs[i];
+        var asciiCode = val.charCodeAt(i);
+        if (asciiCode*1 === asciiCode) {
+          if (isPrintable(asciiCode)) {
+            asciiByteEL.textContent = val.charAt(i);
+            asciiByteEL.className = '';
+          } else {
+            asciiByteEL.textContent = '·';
+            asciiByteEL.className = 'noprint';
+          }
+          var byteStr = asciiCode.toString(16);
+          if (byteStr.length < 2) byteStr = '0' + byteStr;
+          hexaByteEL.className = '';
+
+        } else {
+          byteStr = '..';
+          asciiByteEL.textContent = '.';
+          asciiByteEL.className = 'invisible';
+          hexaByteEL.className = 'invisible';
+        }
+        hexaByteEL.textContent = byteStr;
+      }
+      setCursorByOffset(CURRENT_OFFSET);
+      displayEditedBytes();
+    });
+  }
+}
+
+var displayChunck = $io.fn.debounce(displayChunckFn, 1);
+
+/////////////////////////////////////////////////////////////////////////////
+
+function setCursorOnHistoryCursor(historyCursor) {
+  try {
+    //setCursorByOffset(undoHistory[undoHistCursor-1][0]);
+    setCursorByOffset(historyCursor[0]);
+  } catch(e) {/*console.error(e)*/}
+}
+
+function $iframeInit(cb) { 'use strict';
+
+  if (this.menu.key) {
+    var cfg = this.menu.key.config();
+    delete cfg.el;
+    var kkk = $key().config(cfg);
+    this.menu.key.destroy();
+  }
+
+  return  {
+    readFile: function(val) {
+      BLOB = val;
+      reset();
+      init();
+    },
+    setValue: function(val) {
+      if (!val) {
+        var buffer = new ArrayBuffer(256);
+        var int8View = new Int8Array(buffer);
+        for (var i = 0; i < int8View.length; i++) int8View[i] = i;
+        BLOB = new Blob([int8View], {type: 'text/plain'})
+      } else {
+        BLOB = val;
+      }
+      reset();
+      init();
+    },
+    getValue: function(cb) {
+      $io.Blob.ArrayBuffer(BLOB, function(buffer) {
+        var int8View = new Int8Array(buffer);
+        forEachEditedBytes(function(offset, hex) {
+          int8View[offset] = parseInt(hex, 16);
+        });
+        cb(new Blob([int8View], {type: BLOB.type}));
+      });
+    },
+    undo: function(cb) {
+      undoManager.undo(function(historyCursor) {
+        displayChunckFn(CURRENT_START);
+        setCursorOnHistoryCursor(historyCursor);
+      });
+    },
+    redo: function(cb) {
+      undoManager.redo(function(historyCursor) {
+        displayChunckFn(CURRENT_START);
+        setCursorOnHistoryCursor(historyCursor);
+      });
+    }
+  }
+}
+
+</script>
+
+<!--
+
+Complete List of ASCii codes     Format: plain text www.theasciicode.com.ar
+
+
+    symbol
+ascii code  0 NULL  (Null character)
+ascii code  1 SOH (Start of Header)
+ascii code  2 STX (Start of Text)
+ascii code  3 ETX (End of Text)
+ascii code  4 EOT (End of Transmission)
+ascii code  5 ENQ (Enquiry)
+ascii code  6 ACK (Acknowledgement)
+ascii code  7 BEL (Bell)
+ascii code  8 BS  (Backspace)
+ascii code  9 HT  (Horizontal Tab)
+ascii code  10  LF  (Line feed)
+ascii code  11  VT  (Vertical Tab)
+ascii code  12  FF  (Form feed)
+ascii code  13  CR  (Carriage return)
+ascii code  14  SO  (Shift Out)
+ascii code  15  SI  (Shift In)
+ascii code  16  DLE (Data link escape)
+ascii code  17  DC1 (Device control 1)
+ascii code  18  DC2 (Device control 2)
+ascii code  19  DC3 (Device control 3)
+ascii code  20  DC4 (Device control 4)
+ascii code  21  NAK (Negative acknowledgement)
+ascii code  22  SYN (Synchronous idle)
+ascii code  23  ETB (End of transmission block)
+ascii code  24  CAN (Cancel)
+ascii code  25  EM  (End of medium)
+ascii code  26  SUB (Substitute)
+ascii code  27  ESC (Escape)
+ascii code  28  FS  (File separator)
+ascii code  29  GS  (Group separator)
+ascii code  30  RS  (Record separator)
+ascii code  31  US  (Unit separator)
+
+ascii code  32    (space)
+ascii code  33  ! (exclamation mark)
+ascii code  34  " (Quotation mark)
+ascii code  35  # (Number sign)
+ascii code  36  $ (Dollar sign)
+ascii code  37  % (Percent sign)
+ascii code  38  & (Ampersand)
+ascii code  39  ' (Apostrophe)
+ascii code  40  ( (round brackets or parentheses)
+ascii code  41  ) (round brackets or parentheses)
+ascii code  42  * (Asterisk)
+ascii code  43  + (Plus sign)
+ascii code  44  , (Comma)
+ascii code  45  - (Hyphen)
+ascii code  46  . (Full stop , dot)
+ascii code  47  / (Slash)
+ascii code  48  0 (number zero)
+ascii code  49  1 (number one)
+ascii code  50  2 (number two)
+ascii code  51  3 (number three)
+ascii code  52  4 (number four)
+ascii code  53  5 (number five)
+ascii code  54  6 (number six)
+ascii code  55  7 (number seven)
+ascii code  56  8 (number eight)
+ascii code  57  9 (number nine)
+ascii code  58  : (Colon)
+ascii code  59  ; (Semicolon)
+ascii code  60  < (Less-than sign )
+ascii code  61  = (Equals sign)
+ascii code  62  > (Greater-than sign ; Inequality)
+ascii code  63  ? (Question mark)
+ascii code  64  @ (At sign)
+ascii code  65  A (Capital A )
+ascii code  66  B (Capital B )
+ascii code  67  C (Capital C )
+ascii code  68  D (Capital D )
+ascii code  69  E (Capital E )
+ascii code  70  F (Capital F )
+ascii code  71  G (Capital G )
+ascii code  72  H (Capital H )
+ascii code  73  I (Capital I )
+ascii code  74  J (Capital J )
+ascii code  75  K (Capital K )
+ascii code  76  L (Capital L )
+ascii code  77  M (Capital M )
+ascii code  78  N (Capital N )
+ascii code  79  O (Capital O )
+ascii code  80  P (Capital P )
+ascii code  81  Q (Capital Q )
+ascii code  82  R (Capital R )
+ascii code  83  S (Capital S )
+ascii code  84  T (Capital T )
+ascii code  85  U (Capital U )
+ascii code  86  V (Capital V )
+ascii code  87  W (Capital W )
+ascii code  88  X (Capital X )
+ascii code  89  Y (Capital Y )
+ascii code  90  Z (Capital Z )
+ascii code  91  [ (square brackets or box brackets)
+ascii code  92  \ (Backslash)
+ascii code  93  ] (square brackets or box brackets)
+ascii code  94  ^ (Caret or circumflex accent)
+ascii code  95  _ (underscore , understrike , underbar or low line)
+ascii code  96  ` (Grave accent)
+ascii code  97  a (Lowercase  a )
+ascii code  98  b (Lowercase  b )
+ascii code  99  c (Lowercase  c )
+ascii code  100 d (Lowercase  d )
+ascii code  101 e (Lowercase  e )
+ascii code  102 f (Lowercase  f )
+ascii code  103 g (Lowercase  g )
+ascii code  104 h (Lowercase  h )
+ascii code  105 i (Lowercase  i )
+ascii code  106 j (Lowercase  j )
+ascii code  107 k (Lowercase  k )
+ascii code  108 l (Lowercase  l )
+ascii code  109 m (Lowercase  m )
+ascii code  110 n (Lowercase  n )
+ascii code  111 o (Lowercase  o )
+ascii code  112 p (Lowercase  p )
+ascii code  113 q (Lowercase  q )
+ascii code  114 r (Lowercase  r )
+ascii code  115 s (Lowercase  s )
+ascii code  116 t (Lowercase  t )
+ascii code  117 u (Lowercase  u )
+ascii code  118 v (Lowercase  v )
+ascii code  119 w (Lowercase  w )
+ascii code  120 x (Lowercase  x )
+ascii code  121 y (Lowercase  y )
+ascii code  122 z (Lowercase  z )
+ascii code  123 { (curly brackets or braces)
+ascii code  124 | (vertical-bar, vbar, vertical line or vertical slash)
+ascii code  125 } (curly brackets or braces)
+ascii code  126 ~ (Tilde ; swung dash)
+ascii code  127 DEL (Delete)
+
+ascii code  128 Ç (Majuscule C-cedilla )
+ascii code  129 ü (letter "u" with umlaut or diaeresis ; "u-umlaut")
+ascii code  130 é (letter "e" with acute accent or "e-acute")
+ascii code  131 â (letter "a" with circumflex accent or "a-circumflex")
+ascii code  132 ä (letter "a" with umlaut or diaeresis ; "a-umlaut")
+ascii code  133 à (letter "a" with grave accent)
+ascii code  134 å (letter "a"  with a ring)
+ascii code  135 ç (Minuscule c-cedilla)
+ascii code  136 ê (letter "e" with circumflex accent or "e-circumflex")
+ascii code  137 ë (letter "e" with umlaut or diaeresis ; "e-umlaut")
+ascii code  138 è (letter "e" with grave accent)
+ascii code  139 ï (letter "i" with umlaut or diaeresis ; "i-umlaut")
+ascii code  140 î (letter "i" with circumflex accent or "i-circumflex")
+ascii code  141 ì (letter "i" with grave accent)
+ascii code  142 Ä (letter "A" with umlaut or diaeresis ; "A-umlaut")
+ascii code  143 Å (letter "A"  with a ring)
+ascii code  144 É (Capital letter "E" with acute accent or "E-acute")
+ascii code  145 æ (Latin diphthong "ae")
+ascii code  146 Æ (Latin diphthong "AE")
+ascii code  147 ô (letter "o" with circumflex accent or "o-circumflex")
+ascii code  148 ö (letter "o" with umlaut or diaeresis ; "o-umlaut")
+ascii code  149 ò (letter "o" with grave accent)
+ascii code  150 û (letter "u" with circumflex accent or "u-circumflex")
+ascii code  151 ù (letter "u" with grave accent)
+ascii code  152 ÿ (letter "y" with diaeresis)
+ascii code  153 Ö (letter "O" with umlaut or diaeresis ; "O-umlaut")
+ascii code  154 Ü (letter "U" with umlaut or diaeresis ; "U-umlaut")
+ascii code  155 ø (slashed zero or empty set)
+ascii code  156 £ (Pound sign ; symbol for the pound sterling)
+ascii code  157 Ø (slashed zero or empty set)
+ascii code  158 × (multiplication sign)
+ascii code  159 ƒ (function sign ; f with hook sign ; florin sign )
+ascii code  160 á (letter "a" with acute accent or "a-acute")
+ascii code  161 í (letter "i" with acute accent or "i-acute")
+ascii code  162 ó (letter "o" with acute accent or "o-acute")
+ascii code  163 ú (letter "u" with acute accent or "u-acute")
+ascii code  164 ñ (letter "n" with tilde ; enye)
+ascii code  165 Ñ (letter "N" with tilde ; enye)
+ascii code  166 ª (feminine ordinal indicator )
+ascii code  167 º (masculine ordinal indicator)
+ascii code  168 ¿ (Inverted question marks)
+ascii code  169 ® (Registered trademark symbol)
+ascii code  170 ¬ (Logical negation symbol)
+ascii code  171 ½ (One half)
+ascii code  172 ¼ (Quarter or  one fourth)
+ascii code  173 ¡ (Inverted exclamation marks)
+ascii code  174 « (Guillemets or  angle quotes)
+ascii code  175 » (Guillemets or  angle quotes)
+ascii code  176 ░
+ascii code  177 ▒
+ascii code  178 ▓
+ascii code  179 │ (Box drawing character)
+ascii code  180 ┤ (Box drawing character)
+ascii code  181 Á (Capital letter "A" with acute accent or "A-acute")
+ascii code  182 Â (letter "A" with circumflex accent or "A-circumflex")
+ascii code  183 À (letter "A" with grave accent)
+ascii code  184 © (Copyright symbol)
+ascii code  185 ╣ (Box drawing character)
+ascii code  186 ║ (Box drawing character)
+ascii code  187 ╗ (Box drawing character)
+ascii code  188 ╝ (Box drawing character)
+ascii code  189 ¢ (Cent symbol)
+ascii code  190 ¥ (YEN and YUAN sign)
+ascii code  191 ┐ (Box drawing character)
+ascii code  192 └ (Box drawing character)
+ascii code  193 ┴ (Box drawing character)
+ascii code  194 ┬ (Box drawing character)
+ascii code  195 ├ (Box drawing character)
+ascii code  196 ─ (Box drawing character)
+ascii code  197 ┼ (Box drawing character)
+ascii code  198 ã (letter "a" with tilde or "a-tilde")
+ascii code  199 Ã (letter "A" with tilde or "A-tilde")
+ascii code  200 ╚ (Box drawing character)
+ascii code  201 ╔ (Box drawing character)
+ascii code  202 ╩ (Box drawing character)
+ascii code  203 ╦ (Box drawing character)
+ascii code  204 ╠ (Box drawing character)
+ascii code  205 ═ (Box drawing character)
+ascii code  206 ╬ (Box drawing character)
+ascii code  207 ¤ (generic currency sign )
+ascii code  208 ð (lowercase "eth")
+ascii code  209 Ð (Capital letter "Eth")
+ascii code  210 Ê (letter "E" with circumflex accent or "E-circumflex")
+ascii code  211 Ë (letter "E" with umlaut or diaeresis ; "E-umlaut")
+ascii code  212 È (letter "E" with grave accent)
+ascii code  213 ı (lowercase dot less i)
+ascii code  214 Í (Capital letter "I" with acute accent or "I-acute")
+ascii code  215 Î (letter "I" with circumflex accent or "I-circumflex")
+ascii code  216 Ï (letter "I" with umlaut or diaeresis ; "I-umlaut")
+ascii code  217 ┘ (Box drawing character)
+ascii code  218 ┌ (Box drawing character)
+ascii code  219 █ (Block)
+ascii code  220 ▄
+ascii code  221 ¦ (vertical broken bar )
+ascii code  222 Ì (letter "I" with grave accent)
+ascii code  223 ▀
+ascii code  224 Ó (Capital letter "O" with acute accent or "O-acute")
+ascii code  225 ß (letter "Eszett" ; "scharfes S" or "sharp S")
+ascii code  226 Ô (letter "O" with circumflex accent or "O-circumflex")
+ascii code  227 Ò (letter "O" with grave accent)
+ascii code  228 õ (letter "o" with tilde or "o-tilde")
+ascii code  229 Õ (letter "O" with tilde or "O-tilde")
+ascii code  230 µ (Lowercase letter "Mu" ; micro sign or micron)
+ascii code  231 þ (capital letter "Thorn")
+ascii code  232 Þ (lowercase letter "thorn")
+ascii code  233 Ú (Capital letter "U" with acute accent or "U-acute")
+ascii code  234 Û (letter "U" with circumflex accent or "U-circumflex")
+ascii code  235 Ù (letter "U" with grave accent)
+ascii code  236 ý (letter "y" with acute accent)
+ascii code  237 Ý (Capital letter "Y" with acute accent)
+ascii code  238 ¯ (macron symbol)
+ascii code  239 ´ (Acute accent)
+ascii code  240 ¬ (Hyphen)
+ascii code  241 ± (Plus-minus sign)
+ascii code  242 ‗ (underline or underscore)
+ascii code  243 ¾ (three quarters)
+ascii code  244 ¶ (paragraph sign or pilcrow)
+ascii code  245 § (Section sign)
+ascii code  246 ÷ (The division sign ; Obelus)
+ascii code  247 ¸ (cedilla)
+ascii code  248 ° (degree symbol )
+ascii code  249 ¨ (Diaeresis)
+ascii code  250 • (Interpunct or space dot)
+ascii code  251 ¹ (superscript one)
+ascii code  252 ³ (cube or superscript three)
+ascii code  253 ² (Square or superscript two)
+ascii code  254 ■ (black square)
+ascii code  255 nbsp  (non-breaking space or no-break space)
+
+    visit : www.theasciicode.com.ar
+
+
+
+ -->
+
+
+
+</body></html>
