@@ -1,0 +1,124 @@
+<html class="translated-ltr"><head><style>.gauge{display:inline-block;position:relative;overflow:hidden;height:84px;width:214px}.gauge, .inner-circle, .clip-left, .clip-right{background:#F9F9F9}.gauge:before{background:#F0F0F0;content:"";display:block;border-radius:50%/100%;border-bottom-left-radius:0;border-bottom-right-radius:0;height:0;padding-bottom:50%;width:100%}.inner-circle{content:"";display:block;border-radius:50%/100%;border-top-left-radius:0;border-top-right-radius:0;height:0;padding-bottom:37.5%;width:75%;-webkit-transform-origin:center top;transform-origin:center top;-webkit-transform:rotate(.5turn);transform:rotate(.5turn);margin:auto}.clip-left, .clip-right{height:100%;position:absolute;width:100%;z-index:1000}.clip-left{-webkit-transform:rotate(.05turn) translateX(-50%);transform:rotate(.05turn) translateX(-50%)}.clip-right{-webkit-transform:rotate(.95turn) translateX(50%);transform:rotate(.95turn) translateX(50%)}.meter{background:linear-gradient(to left, #F4FF81, #AEEA00);position:absolute;width:100%;height:0;padding-bottom:50%;border-radius:50% / 100%;border-top-left-radius:0;border-top-right-radius:0;transition:500ms;-webkit-transform-origin:center top;transform-origin:center top}.speed-test-gauge{text-align:center;position:relative;padding-top:26px}.tick{position:absolute;display:inline-block;z-index:1;margin-left:auto;margin-right:auto;right:0;left:0;top:0;font-weight:700;color:#000000;opacity:0.3;font-size:12px}.tick-unit{font-size:11px}.current-speed{display:block;font-weight:300;font-size:56px;color:#000000;opacity:0.6;margin-top:-32px}.current-speed-units{font-size:16px;width:0px;display:inline-block;margin-left:-12px}
+
+/*# sourceURL=com/google/fiber/speedtest/SpeedTestGauge.CSS */
+</style><style>html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video{margin:0;padding:0;border:0;font:inherit;font-size:100%;vertical-align:baseline}html, body{margin:0;padding:0;height:100%;background-color:#F5F5F5}.speed-test{-webkit-tap-highlight-color:rgba(0, 0, 0, 0);font-family:'Roboto', sans-serif;min-width:300px;position:relative;height:auto !important;height:100%;min-height:100%}#top{padding-bottom:270px}#footer{position:absolute;bottom:0;height:240px;width:100%;display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;-webkit-align-content:center;align-content:center;background-color:#272A2C;font-family:"Roboto","Noto Sans",sans-serif}#logo{display:-webkit-flex;display:flex;-webkit-justify-content:space-between;justify-content:space-between;-webkit-align-content:center;align-content:center;-webkit-align-items:center;align-items:center;height:56px;background-color:#0091EA;width:100%;-webkit-box-shadow:0 0 4px rgba(0, 0, 0, .14),0 4px 8px rgba(0, 0, 0, .28);box-shadow:0 0 4px rgba(0, 0, 0, .14),0 4px 8px rgba(0, 0, 0, .28);margin:0 0 6px 0;color:white}#logo img{padding-left:4px;height:38px;width:auto}#send-feedback, #send-feedback-large{padding:16px;text-decoration:none;color:white;font-weight:bold;cursor:pointer}#send-feedback-large{display:none}.flat-button{cursor:pointer}.container{max-width:600px;margin:auto}#header{display:-webkit-flex;display:flex;-webkit-justify-content:space-between;justify-content:space-between;-webkit-align-items:center;align-items:center;-webkit-align-content:center;align-content:center;margin:16px auto 6px;padding:0 12px}@media screen and (min-width: 800px){#header{padding:0}#logo img{padding-left:26px}#send-feedback{display:none}#send-feedback-large{display:inline}}#title{color:#0091EA;font-size:24px}#network{color:#333333;font-size:15px}#speed-test{-webkit-box-shadow:0 -1px 0 #e5e5e5,0 0 2px rgba(0, 0, 0, .12),0 2px 4px rgba(0, 0, 0, .24);box-shadow:0 -1px 0 #e5e5e5,0 0 2px rgba(0, 0, 0, .12),0 2px 4px rgba(0, 0, 0, .24)}#speedometer{background-color:#F9F9F9;text-align:center;height:211px;padding-top:16px}#speed-result{background-color:white;border-top:1px solid #DDD}.status{display:block;font-weight:700;font-size:14px;color:#666;padding-top:12px}.footer-row{display:-webkit-flex;display:flex;color:#666;font-size:16px;padding:8px 16px;-webkit-align-items:center;align-items:center}.underlined-content{border-bottom:solid 1px #DAD9D9}.footer-half{width:50%;text-align:center;-webkit-align-self:flex-start;align-self:flex-start}.footer-row .material-icons-extended{width:40px;color:#66BDF2}.speed-label{font-weight:700;padding:6px 8px 6px 16px}.label-row{display:-webkit-flex;display:flex;-webkit-align-items:stretch;align-items:stretch;-webkit-justify-content:center;justify-content:center;width:100%}.label-row .speed-label{padding:2px 16px 2px 2px}.footer-row .speed-value{white-space:nowrap;padding-right:32px;padding:6px 0}.transfer-speed{font-size:36px}.action-button{-webkit-box-shadow:0 0 0px rgba(0, 0, 0, .14),0 2px 2px rgba(0, 0, 0, .28);box-shadow:0 0 0px rgba(0, 0, 0, .14),0 2px 2px rgba(0, 0, 0, .28);background-color:#0091EA;border-radius:50% 50%;border-width:0;height:48px;width:48px;display:inline-block;font-size:24px;color:white;line-height:48px;text-align:center;float:right;margin:-24px 62px -24px -0;padding:0;transition:background-color 300ms, transform 300ms;-webkit-user-select:none;user-select:none}.action-button:focus{outline-width:0}.action-button:disabled{background-color:#7DC7F7;-webkit-transform:rotate(1.0turn);transform:rotate(1.0turn);-webkit-transform:rotate(1.0turn);cursor:default}.action-button img{margin:6px}#cancel-test{display:none}.running #run-test{display:none}.running #cancel-test{display:inline}#ping{padding-left:50px}#speeds{height:5em;padding-left:30px;padding-right:30px}#expected-speeds{text-align:center;padding:16px 8px;font-size:16px;color:#666}#expected-speeds a{text-decoration:none;color:#0091EA}#footer .footer-content{display:-webkit-flex;display:flex;-webkit-justify-content:space-around;justify-content:space-around;-webkit-align-items:flex-start;align-items:flex-start;-webkit-align-content:center;align-content:center;width:100%;margin:0 auto}#footer .footer-section{padding:24px 12px 0}#footer .footer-group-title{color:#fff;cursor:default;letter-spacing:2px;font-size:12px;font-weight:600;text-transform:uppercase}#footer .footer-link-group{margin:24px 0}#footer .footer-item{font-size:14px;line-height:16px;margin-top:8px}#footer .footer-link{color:#fff;opacity:.48;position:relative;-webkit-transition:opacity 160ms cubic-bezier(0.4, 0, 1, 1);transition:opacity 160ms cubic-bezier(0.4, 0, 1, 1)}#footer a{cursor:pointer;text-decoration:none}ol, ul{list-style:none}li{display:list-item;text-align:-webkit-match-parent}
+
+/*# sourceURL=com/google/fiber/speedtest/SpeedTestView.CSS */
+</style><style>.detailView{border:solid 2px #dddddd;background:#fafafa;display:table}.detailView .heading{color:black;float:left;font-size:16px;margin-bottom:8px;padding:2px}.detailView .propertyLabel{font-size:14px;display:block;font-weight:bold;text-align:right;float:left}.detailView input{font-size:12px;padding:4px 2px;border:solid 1px #aacfe4;margin:2px 0 0px 10px}.detailView textarea{float:left;font-size:12px;padding:4px 2px;border:solid 1px #aacfe4;margin:2px 0 0px 10px;width:98%;overflow:auto}.detailView select{font-size:12px;padding:4px 2px;border:solid 1px #aacfe4;margin:2px 0 0px 10px}.detailView .label{color:#444;font-size:smaller;padding-left:6px;padding-top:8px;vertical-align:top}.detailArrayLabel{font-size:medium}.detailArrayLabel .foamTable{margin:1px}
+
+/*# sourceURL=foam/ui/DetailView.CSS */
+</style><meta charset="utf-8"><link href="http://fonts.googleapis.com/css?family=Roboto:500,300,700,400" rel="stylesheet" type="text/css"><meta name="viewport" content="width=device-width, initial-scale=1"><script type="text/javascript" src="feedback_bin.js"></script><script src="foam.js"></script><link type="text/css" rel="stylesheet" charset="UTF-8" href="https://translate.googleapis.com/translate_static/css/translateelement.css"></head><body style="margin:0px">
+      
+      <div id="view3" class="speed-test">
+        <div id="top">
+          <div id="logo">
+            <img src="/logo.png" alt="Google Fiber">
+            <a id="send-feedback" class="flat-button available"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ENVIAR COMENTÁRIOS</font></font></a>
+            <a id="send-feedback-large" class="flat-button available"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ENVIAR FEEDBACK SOBRE O TESTE DE VELOCIDADE</font></font></a>
+          </div>
+          <div id="header" class="container">
+            <h1 id="title"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">speedtest</font></font></h1>
+            <div id="network">
+              <span id="view9" class="speed-to-label" name="speedToLabel"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Velocidade para: </font></font></span>
+              <span id="view11" class="speed-to" name="speedTo"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Charlotte</font></font></span>
+            </div>
+          </div>
+          <div id="speed-test" class="container">
+            <div id="speedometer">
+              
+      <div id="view12" class="speed-test-gauge">
+        <div class="tick" style="top: 84px; left: -260px;"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+          0 </font></font><span class="tick-unit"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">M</font></font></span>
+        </div>
+        <div class="tick" style="top: 24px; left: -160px;"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+          25 </font></font><span class="tick-unit"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">M</font></font></span>
+        </div>
+        <div class="tick" style="top: 0px; left: 0px;"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+          100 </font></font><span class="tick-unit"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">M</font></font></span>
+        </div>
+        <div class="tick" style="top: 24px; left: 160px;"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+          250 </font></font><span class="tick-unit"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">M</font></font></span>
+        </div>
+        <div class="tick" style="top: 84px; left: 270px;"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+          1000 </font></font><span class="tick-unit"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">M</font></font></span>
+        </div>
+        <div class="gauge">
+          <div class="clip-left"></div>
+          <div class="clip-right"></div>
+          <div>
+            <div class="meter" id="view12-meter" style="transform: rotate(0.05turn);"></div>
+            <div class="inner-circle"></div>
+          </div>
+        </div>
+        <span class="current-speed">
+          <span id="view32" name="data" class=""><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">0 </font></font></span>
+          <span id="view34" class="current-speed-units" name="units"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Mbps</font></font></span>
+        </span>
+      </div>
+    
+              <span id="view14" class="status" name="status"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">click in the button for start</font></font></span>
+            </div>
+            <div id="speed-result">
+              <button id="run-test" class="flat-button action-button available"><img src="/ic_play_arrow_white_36dp_1x.png"></button>
+              <button id="cancel-test" class="flat-button action-button available"><img src="/ic_stop_white_36dp_1x.png"></button>
+              <div id="ping" class="footer-row">
+                <div class="speed-label"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">PING:</font></font></div>
+                <div class="speed-value">
+                  <span id="view20" name="ping" class=" placeholder"></span>
+                  <span id="view22" name="pingUnits" class=" placeholder"></span>
+                </div>
+              </div>
+              <div id="speeds" class="footer-row">
+                <div class="footer-half">
+                  <div class="label-row">
+                    <img src="/ic_file_download_black_24dp_1x.png">
+                    <div class="speed-label"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">DOWNLOAD</font></font></div>
+                  </div>
+                  <div class="speed-value upload-speed">
+                    <span id="view24" class="transfer-speed placeholder" name="downloadSpeedMbps"></span>
+                    <span id="view26" class="transfer-units placeholder" name="downloadSpeedUnits"></span>
+                  </div>
+                </div>
+                <div class="footer-half">
+                  <div class="label-row">
+                    <img src="/ic_file_upload_black_24dp_1x.png">
+                    <div class="speed-label"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">UPLOAD</font></font></div>
+                  </div>
+                  <div class="speed-value download-speed">
+                    <span id="view28" class="transfer-speed placeholder" name="uploadSpeedMbps"></span>
+                    <span id="view30" class="transfer-units placeholder" name="uploadSpeedUnits"></span>
+                  </div>
+                </div>
+              </div>
+              <div id="expected-speeds">
+                <span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">what a velocity? </font></font></span>
+                <a href="https://support.google.com/fiber/answer/6250056" target="_blank"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">READ MORE...</font></font></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="footer">
+          <div class="footer-content container">
+            <div class="footer-section"><p class="footer-group-title"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Sobre</font></font></p>
+              <ul class="footer-link-group">
+                <li class="footer-item"><a class="footer-link" href="https://googlefiberblog.blogspot.com/" target="_self"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Blog</font></font></a></li>
+                <li class="footer-item"><a class="footer-link" href="https://fiber.google.com/careers/" target="_self"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Carreiras</font></font></a>
+                </li>
+                <li class="footer-item"><a class="footer-link" href="https://fiber.google.com/legal/" target="_blank"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Privacidade e Termos</font></font></a></li>
+                <li class="footer-item"><a class="footer-link" href="https://fiber.google.com/support/" target="_self"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Apoio, suporte</font></font></a></li>
+                
+              </ul>
+            </div>
+            <div class="footer-section"><p class="footer-group-title"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Mídia social</font></font></p>
+              <ul class="footer-link-group">
+                <li class="footer-item"><a class="footer-link" href="https://plus.google.com/+GoogleFiber" target="_blank"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Google+</font></font></a></li>
+                <li class="footer-item"><a class="footer-link" href="https://www.facebook.com/GoogleFiber" target="_blank"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Facebook</font></font></a></li>
+                <li class="footer-item"><a class="footer-link" href="https://twitter.com/GoogleFiber" target="_blank"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Twitter</font></font></a></li>
+                <li class="footer-item"><a class="footer-link" href="https://www.youtube.com/GoogleFiberOfficial" target="_blank"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Youtube</font></font></a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div><div id="goog-gt-tt" class="skiptranslate" dir="ltr"><div style="padding: 8px;"><div><div class="logo"><img src="https://www.gstatic.com/images/branding/product/1x/translate_24dp.png" width="20" height="20" alt="Google Tradutor"></div></div></div><div class="top" style="padding: 8px; float: left; width: 100%;"><h1 class="title gray">Texto original</h1></div><div class="middle" style="padding: 8px;"><div class="original-text"></div></div><div class="bottom" style="padding: 8px;"><div class="activity-links"><span class="activity-link">Sugerir uma tradução melhor</span><span class="activity-link"></span></div><div class="started-activity-container"><hr style="color: #CCC; background-color: #CCC; height: 1px; border: none;"><div class="activity-root"></div></div></div><div class="status-message" style="display: none;"></div></div>
+    
+    <div class="goog-te-spinner-pos"><div class="goog-te-spinner-animation"><svg xmlns="http://www.w3.org/2000/svg" class="goog-te-spinner" width="96px" height="96px" viewBox="0 0 66 66"><circle class="goog-te-spinner-path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle></svg></div></div></body></html>
